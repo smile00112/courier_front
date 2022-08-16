@@ -1,0 +1,9 @@
+.orders__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .orders__list-item{
+    width: 277px;
+  }
+}
+
