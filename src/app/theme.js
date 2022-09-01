@@ -4,7 +4,7 @@ const theme = createTheme(
   {
     typography: {
       useNextVariants: true,
-      fontFamily: "'Montserrat', sans-serif !important",
+      fontFamily: "Tahoma",
       fontSize: 14,
     },
   },

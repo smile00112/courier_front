@@ -1,0 +1,253 @@
+.couriers__list-item {
+  width: 277px;
+}
+
+.courier-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 10px;
+  gap: 8px;
+  height: auto;
+  cursor: pointer;
+  background-color: #EAECF3;
+  border-radius: 10px;
+  border: 2px solid #1D1D1D;
+  
+  -webkit-transition:  border 1s ease;
+  -moz-transition:  border 1s ease;
+  -o-transition:  border 1s ease;
+  -ms-transition: border 1s ease;
+  transition: border 1s ease; 
+
+  &:hover{
+    //border: 2px solid rgba(186, 194, 226, 0.5);
+    border: 2px solid rgba(186, 194, 226, 0.5);
+
+
+    transition-delay:0.1s;
+  }  
+  &.active {
+    //box-shadow: 0px 0px 10px 2px rgb(182 5 243 / 76%);
+    border: 2px solid rgba(186, 194, 226, 0.5);
+  }
+
+  &__context-menu{
+    &:after{
+      
+    }
+  }
+  &__body{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+
+    &-top{
+      width: 100%;
+    }
+    &-middle-inner{
+      width: 100%;
+    }
+    &-middle{
+      background-color: #FAFBFE;
+      border-radius: 10px;
+      padding: 10px;
+
+      &__address{
+        font-weight: 500;
+        font-size: 16px;
+      }
+      &__client-name{
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14px;
+        margin: 4px 0px 10px 0;
+        color: #919191;
+      }    
+      &__address-data{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 10px;
+
+        ul{
+          width: 100%;
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+        li{
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 3px;
+          font-size: 14px;
+          line-height: 16px;
+        }
+        nav {
+          bcourier: 1px solid #CCD7EC;
+          border-radius: 10px;
+          padding: 0;
+          .list-header{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding-right: 5px;
+          }
+          .MuiListItemButton-root{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 6px 16px;
+          }
+          .MuiCollapse-vertical:first-child{
+            border-top: 1px solid #CCD7EC;
+          }
+        }
+
+      }
+      &__products{
+        width: 100%;
+        border: 1px solid #CCD7EC;
+        border-radius: 10px;
+      }
+    }
+
+    
+  }
+  &__bottom{
+
+    .add-courier-button{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 8px 10px;
+      gap: 10px;
+
+      width: 257.33px;
+      height: 35px;
+      color: #fff;
+      background: #2B2D35;
+      border-radius: 8px;
+      text-transform: none;
+      cursor: pointer;
+    }
+    .adding-courier-button{
+      color: #000;
+      text-transform: none;
+      font-weight: 400;
+      font-size: 14px;
+      background-color: #FBFCFF;
+      border-radius: 8px;
+      width: 257.33px;
+      height: 35px;
+      &:hover{
+        background-color: #32343d;
+        color: #fff;
+        border-radius: 8px;
+        svg{
+          fill: #fff;
+        }
+      }      
+    }
+    
+    &:hover{
+      background-color: #32343d;
+      border-radius: 8px;
+    }
+  }
+  &__top{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .courier-card__courier-info{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      &__f{
+        width: 60%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+      }
+      &__l{
+        margin-right: 20px;
+      }
+    }
+    
+  }  
+
+  .courier_targer{
+    cursor: pointer;
+  }
+  
+
+  &__info-list{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    li{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    svg{
+      margin-right: 5px;
+    }
+  }
+}
+
+.courier-card__body-bottom{
+  width: 100%;
+
+  .courier-card__actions-list{
+    width: 100%;
+    color: #fff;
+
+    li:not(:last-child){
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      // border-bottom: 1px solid black;
+    }
+
+    .courier-action-select, .action-btn, .courier-action-input-label{
+      width: 100%;
+      color: #fff;
+    }
+
+
+  }
+}
+
+
+
+.bg-green{
+  background-color: #2E9845;
+  color: #fff;
+}
+.bg-red{
+  background-color: #982727;
+  color: #fff;
+}
+.bg-grey{
+  background-color: #2B2D35;  
+  color: #fff;
+}
+.bg-black{
+  background-color: #1D1D1D;
+  color: #696E83;
+  border: 2px solid #2B2D35;
+}

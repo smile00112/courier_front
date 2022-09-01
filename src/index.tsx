@@ -26,15 +26,17 @@ const store = createStore();
 //         <App /> 
 //     </Provider> 
 //   </React.StrictMode>
-// );
+// );  
+
 ReactDOM.render(
-  <React.StrictMode>
+  /*<React.StrictMode>*/
     <Provider store={store}>
       <Router history={history}>
         <App />
       </Router>
     </Provider>
-  </React.StrictMode>,
+  /*</React.StrictMode>*/
+  ,
   document.getElementById('root')
 );
 

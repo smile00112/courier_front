@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadOrdersList } from '../../../store/orders';
-// import { loadBookingsList } from '../../../store/bookings';
+import { loadCouriersList } from '../../../store/couriers';
 // import { loadLikesList } from '../../../store/likes';
 // import { loadReviewsList } from '../../../store/reviews';
 // import { loadRoomsList } from '../../../store/rooms';
@@ -10,23 +10,24 @@ import { getIsLoggedIn, getUsersLoadingStatus, loadUsersList } from '../../../st
 const AppLoader = ({ children }: any) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(getIsLoggedIn());
-  const usersStatusLoading = false;// useSelector(getUsersLoadingStatus());
-  console.warn('children', children);
-
+  const usersStatusLoading =  useSelector(getUsersLoadingStatus());
+  
   useEffect(() => {
-    dispatch(loadOrdersList());
-    dispatch(loadUsersList());
-    // dispatch(loadRoomsList());
+    if(isLoggedIn){
+      dispatch(loadOrdersList());
+      dispatch(loadUsersList());
+      dispatch(loadCouriersList());
+    }
     // dispatch(loadLikesList());
     // dispatch(loadReviewsList());
     // dispatch(loadBookingsList());
   }, [isLoggedIn]);
 
   if (!usersStatusLoading) {
-    console.warn('usersStatusLoading___1', usersStatusLoading)
+    //console.warn('usersStatusLoading___1', usersStatusLoading)
     return children;
   } else {
-    console.warn('usersStatusLoading___2', usersStatusLoading)
+    //console.warn('usersStatusLoading___2', usersStatusLoading)
 
     return <></>;
   }

@@ -2,8 +2,59 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  .orders__list-item{
+  height: calc(100vh - 110px);
+  overflow: hidden;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+  &-item{
     width: 277px;
+  }
+  &.disabled{
+    opacity: 0.2;
+  }
+
+  .orders-sorting{
+    width: 277px;
+  }
+
+  .orders__list-item.disabled{
+    opacity: 0.2;
   }
 }
 
+.orders-sorting__warapper{
+  display: flex;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1px;
+  cursor: pointer;
+
+  &.free{
+    display: flex;
+    justify-content: flex-start;
+    height: 24px;
+  }
+
+  .delivery, .closed{
+    // border-bottom: 2px solid #282828;
+    border-bottom: 2px solid #282828;
+    height: 25px;
+    width: 50%;
+    text-align: center;
+  }
+  .delivery.active, .closed.active{
+        transition: border-bottom 1s ease; 
+        transition-delay:0.1s;
+        border-bottom: 2px solid #355CBF;
+
+  }
+  
+}

@@ -12,8 +12,12 @@ type IconProps = {
 
 export const DotsIcon: React.FC<IconProps> = ({ className='', color = 'blue', size=[24, 24] }) => {
     const colors = {
+      'default' : '#355CBF',      
       'blue' : '#355CBF',
       'white' : '#ffffff',
+      'grey' : '#696E83',
+      'gay' : '#94A7D7',
+      
     }
     return (
         <svg className={className} width={size[0]} height={size[1]} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,8 +30,10 @@ export const DotsIcon: React.FC<IconProps> = ({ className='', color = 'blue', si
 
 export const BicycleIcon: React.FC<IconProps> = ({ className='', color = 'orange', size=[25, 24] }) => {
   const colors = {
+    'default' : '#EB6D26',    
     'orange' : '#EB6D26',
     'grey' : '#696E83',
+    'white' : '#fff',
   }
   return (
       <svg className={className} width={size[0]} height={size[1]} viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,8 +43,10 @@ export const BicycleIcon: React.FC<IconProps> = ({ className='', color = 'orange
 }
 export const CarIcon: React.FC<IconProps> = ({ className='', color = 'green', size=[25, 24] }) => {
   const colors = {
+    'default' : '#7AC231',
     'green' : '#7AC231',
     'grey' : '#696E83',
+    'white' : '#fff',
   }
   return (
       <svg className={className} width={size[0]} height={size[1]} viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,13 +60,14 @@ export const DownArrowIcon: React.FC<IconProps> = ({ className='', color = 'blac
   }
   return (
       <svg className={className} width={size[0]} height={size[1]} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.7133 9.91908C17.2519 9.53437 18 9.91937 18 10.5812C18 10.844 17.8731 11.0907 17.6592 11.2434L12.0606 15.2424L6.46197 11.2434C6.24813 11.0907 6.12121 10.844 6.12121 10.5812C6.12121 9.91937 6.86933 9.53437 7.40792 9.91908L12.0606 13.2424L16.7133 9.91908Z" fill={colors[color]}/>
+        <path fillRule="evenodd" clipRule="evenodd" d="M16.7133 9.91908C17.2519 9.53437 18 9.91937 18 10.5812C18 10.844 17.8731 11.0907 17.6592 11.2434L12.0606 15.2424L6.46197 11.2434C6.24813 11.0907 6.12121 10.844 6.12121 10.5812C6.12121 9.91937 6.86933 9.53437 7.40792 9.91908L12.0606 13.2424L16.7133 9.91908Z" fill={colors[color]}/>
       </svg>
   )
 }
 export const LocationIcon: React.FC<IconProps> = ({ className='', color = 'blue', size=[25, 24] }) => {
   const colors = {
     'blue' : '#355CBF',
+    'gay' : '#94A7D7',    
   }
   return (
       <svg className={className} width={size[0]} height={size[1]} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -69,6 +78,7 @@ export const LocationIcon: React.FC<IconProps> = ({ className='', color = 'blue'
 export const PriceIcon: React.FC<IconProps> = ({ className='', color = 'blue', size=[20, 20] }) => {
   const colors = {
     'blue' : '#355CBF',
+    'gay' : '#94A7D7',    
   }
   return (
       <svg className={className} width={size[0]} height={size[1]} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -79,6 +89,7 @@ export const PriceIcon: React.FC<IconProps> = ({ className='', color = 'blue', s
 export const TimeIcon: React.FC<IconProps> = ({ className='', color = 'blue', size=[20, 20] }) => {
   const colors = {
     'blue' : '#355CBF',
+    'gay' : '#94A7D7',    
   }
   return (
       <svg className={className} width={size[0]} height={size[1]} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -86,17 +97,64 @@ export const TimeIcon: React.FC<IconProps> = ({ className='', color = 'blue', si
       </svg>
   )
 }
-export const WalkerIcon: React.FC<IconProps> = ({ className='', color = 'red', size=[20, 20] }) => {
+export const WalkerIcon: React.FC<IconProps> = ({ className='', color = 'red', size=[25, 24] }) => {
   const colors = {
+    'default' : '#CA4242',    
     'red' : '#CA4242',
+    'grey' : '#696E83',
+    'white' : '#fff',
   }
   return (
-      <svg className={className} width={size[0]} height={size[1]} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg className={className} width={size[0]} height={size[1]} viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M14.6276 6.38136C15.5575 6.38136 16.3183 5.62056 16.3183 4.69068C16.3183 3.76081 15.5575 3 14.6276 3C13.6977 3 12.9369 3.76081 12.9369 4.69068C12.9369 5.62056 13.6977 6.38136 14.6276 6.38136ZM11.5844 18.1316L12.4297 14.4121L14.2049 16.1028V21.1748H15.8956V14.8348L14.1204 13.1441L14.6276 10.6081C15.7266 11.8761 17.4172 12.7214 19.277 12.7214V11.0307C17.6708 11.0307 16.3183 10.1854 15.642 9.00192L14.7967 7.64938C14.4585 7.14217 13.9513 6.80403 13.3596 6.80403C13.106 6.80403 12.9369 6.88857 12.6833 6.88857L8.28755 8.74832V12.7214H9.97823V9.84726L11.4998 9.25552L10.1473 16.1028L6.00513 15.2574L5.66699 16.9481L11.5844 18.1316Z" fill={colors[color]}/>
       </svg>
   )
 }
 
+export const TargetIcon: React.FC<IconProps> = ({ className='', color = 'red', size=[25, 25] }) => {
+  const colors = {
+    'default' : '#CA4242',    
+    'red' : '#CA4242',
+    'grey' : '#696E83',
+    'white' : '#fff',
+  }
+  return (
+      <svg className={className} width={size[0]} height={size[1]} viewBox="0 0 980.000000 980.000000" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0.000000,980.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+          <path d="M4808 9790 c-26 -4 -70 -16 -98 -25 -91 -30 -226 -147 -282 -245 -54
+-93 -59 -128 -65 -501 l-6 -346 -76 -12 c-213 -35 -606 -151 -871 -258 -579
+-233 -1146 -681 -1562 -1234 -196 -261 -355 -544 -471 -839 -103 -259 -193
+-568 -233 -792 l-17 -98 -301 0 c-354 -1 -426 -8 -516 -52 -88 -43 -206 -160
+-248 -248 -82 -170 -81 -319 6 -484 43 -84 144 -188 218 -228 99 -54 138 -58
+504 -58 l335 0 23 -112 c82 -406 192 -739 344 -1043 195 -391 408 -687 717
+-995 181 -181 319 -297 514 -433 434 -304 974 -530 1507 -632 47 -8 95 -18
+108 -21 l22 -4 0 -243 c1 -133 5 -300 10 -371 8 -120 11 -134 46 -204 75 -152
+226 -265 401 -299 77 -15 89 -15 165 0 177 35 327 147 403 300 37 75 38 79 46
+234 4 87 8 254 9 371 0 116 2 212 3 212 2 0 71 14 153 30 638 129 1192 385
+1690 781 161 127 449 415 576 574 190 239 328 459 463 739 141 291 248 615
+317 958 l32 158 336 0 c366 0 405 4 504 58 74 40 175 144 218 228 87 165 88
+314 6 484 -43 90 -163 209 -250 250 -89 42 -166 49 -514 50 l-302 0 -17 93
+c-251 1401 -1229 2541 -2554 2977 -150 50 -461 130 -587 151 l-71 13 -6 345
+c-5 281 -9 356 -22 401 -50 166 -191 303 -363 354 -67 19 -183 27 -244 16z
+m-474 -2243 c24 -18 34 -122 36 -357 1 -212 10 -285 47 -359 44 -88 154 -194
+247 -236 251 -117 540 -37 691 191 63 94 66 112 76 424 10 303 15 343 42 348
+25 5 218 -51 377 -109 363 -133 659 -327 961 -628 335 -336 517 -622 661
+-1046 71 -207 95 -302 79 -318 -8 -8 -102 -14 -309 -18 -323 -7 -330 -8 -440
+-71 -304 -174 -353 -620 -95 -859 63 -59 126 -99 183 -116 31 -10 141 -17 353
+-22 170 -5 311 -12 315 -16 23 -22 -119 -446 -218 -650 -260 -535 -793 -1051
+-1328 -1282 -190 -83 -551 -198 -567 -181 -2 1 -8 149 -13 326 l-10 324 -36
+74 c-67 134 -198 241 -341 279 -76 19 -214 19 -290 0 -172 -45 -331 -199 -375
+-365 -8 -27 -15 -161 -19 -332 -4 -199 -10 -291 -18 -299 -25 -25 -433 110
+-638 211 -596 293 -1120 867 -1344 1471 -52 143 -121 368 -121 399 0 26 33 30
+342 40 152 5 294 14 316 19 93 25 218 123 277 216 72 114 102 272 76 407 -16
+80 -69 190 -121 250 -44 50 -153 127 -210 148 -21 7 -135 16 -285 21 -281 10
+-364 16 -385 29 -16 10 -3 65 62 269 80 248 181 458 323 671 114 171 198 273
+345 421 333 335 703 553 1195 704 125 39 134 40 159 22z" fill={colors[color]}/>
+</g>
+      </svg>
+  )
+}
 
 // export const Dots = DotsIcon;
 // export const Bicycle = BicycleIcon;

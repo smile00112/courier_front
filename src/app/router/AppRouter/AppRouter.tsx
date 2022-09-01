@@ -7,8 +7,8 @@ import Page404 from '../../components/pages/404Page';
 
 const AppRouter: React.FC = () => {
   const isLoggedIn = useSelector(getIsLoggedIn());
-  console.warn('login = ',isLoggedIn)
-  console.warn('privateRoutes = ',privateRoutes)  
+  // console.warn('login = ',isLoggedIn)
+  // console.warn('privateRoutes = ',privateRoutes)  
   return (
     <>
       <Suspense fallback={<></>}>

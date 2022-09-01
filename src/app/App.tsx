@@ -1,10 +1,10 @@
-import { CssBaseline, ThemeProvider } from '@mui/material';
+//import { CssBaseline, ThemeProvider } from '@mui/material';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import AppLoader from './components/ui/HOC/AppLoader';
 import AppRouter from './router/AppRouter';
 import './scss/app.scss';
-import theme from './theme';
+//import theme from './theme';
 
 const App = () => {
   return (
@@ -12,7 +12,7 @@ const App = () => {
       {/* <ThemeProvider theme={theme}>
         <CssBaseline />
         
-      </ThemeProvider> */}
+      </ThemeProvider> */} 
       <AppRouter />
       <ToastContainer />
     </AppLoader>

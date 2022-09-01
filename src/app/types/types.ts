@@ -38,13 +38,14 @@ export type OrderProducts = {
   quiantity: string;
 }
 export type OrderType = {
-  _id?: string;
+  _id: number;
+  id: number;
   address_from: number | string;
   address_to: AddressData;
   client_id: number;  
   coordinates_from: string;
   coordinates_to: string;
-  courier: number; 
+  courier: CourierType; 
   description?: string
   number: number;   
   order_close_at: Date | string;   
@@ -58,9 +59,42 @@ export type OrderType = {
   products: Array<OrderProducts>,
   delivery_price: number,
   productsTotal: number,  
+  courier_id: number | null,
  // address_data: AddressData 
 };
-
+export type CourierType = {
+  _id: number;
+  id: number;
+  last_name: string;
+  otchestvo: string;
+  first_name: string; 
+  fio: string; 
+  avatar: string | undefined;   
+  coordinates: string | null; 
+  score: string; 
+  rating: string; 
+  status: string;   
+  transport: string;
+  orders: Array<OrderTypeMini>,
+  show_route: boolean,
+};
+export type OrderTypeMini = {
+  id: number;
+  address_from: number | string;
+  address_to: AddressData;
+  client_id: number;  
+  coordinates_from: string;
+  coordinates_to: string;
+  number: number;   
+  order_close_at: Date | string;   
+  order_close_time: Date | string;
+  order_created_at: Date | string;   
+  order_delivery_start_at: Date | string; 
+  price: number; 
+  status: string;
+  courier_id: number | null,
+ // address_data: AddressData 
+};
 export type BookingType = {
   _id?: string;
   adults: number;

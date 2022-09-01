@@ -2,6 +2,7 @@
 import { useDispatch } from 'react-redux';
 import ordersReducer from './orders.js';
 import usersReducer from './users.js';
+import couriersReducer from './couriers.js';
 
 // import reviewsReducer from './reviews';
 // import bookingsReducer from './bookings';
@@ -11,7 +12,8 @@ import { Action, combineReducers, configureStore, ThunkAction } from '@reduxjs/t
 const rootReducer = combineReducers({
   // rooms: roomsReducer,
   users: usersReducer,
-  orders: ordersReducer
+  orders: ordersReducer,
+  couriers: couriersReducer,
   // likes: likesReducer,
   // reviews: reviewsReducer,
   // bookings: bookingsReducer,

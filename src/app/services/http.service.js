@@ -3,7 +3,18 @@ import { toast } from 'react-toastify';
 import configFile from '../config.json';
 import authService from './auth.service';
 import localStorageService from './localStorage.service';
+/* Сокеты */
+import Echo from 'laravel-echo';
+window.Pusher = require('pusher-js');
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: '38a5dbf8bcb4d739a39b',
+    cluster: 'eu',
+    forceTLS: true
+});
+/****Сокеты *****/
 
+const DEBUG = false;
 const http = axios.create({
   baseURL: configFile.apiEndPoint,
 });
@@ -34,7 +45,7 @@ http.interceptors.request.use(
     // } else 
     {
       if (isExpired) {
-        console.warn('http.service  authService.refresh')
+        if(DEBUG) console.warn('http.service  authService.refresh')
         const data = await authService.refresh();
         localStorageService.setTokens(data);
       }
@@ -43,7 +54,7 @@ http.interceptors.request.use(
         config.headers = { ...config.headers, Authorization: `Bearer ${accessToken}` };
       }
     }
-    console.warn('http.service__2');
+    if(DEBUG) console.warn('http.service__2');
     return config;
   },
   function (error) {
@@ -70,7 +81,7 @@ http.interceptors.response.use(
   function (error) {
     const expectedErrors = error.response && error.response.status >= 400 && error.response.status < 500;
     if (!expectedErrors) {
-      console.log(error);
+      if(DEBUG) console.log(error);
       toast.error('Something was wrong. Try it later');
     }
     return Promise.reject(error);
