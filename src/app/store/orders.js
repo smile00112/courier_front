@@ -99,7 +99,7 @@ export const loadOrdersList = () => async dispatch => {
     content.data.map(
       order => {
           order.deliveryTimer = dateDiff(Date.parse(order.order_close_time), new Date());
-          order.productsTotal = 777;//order.products.reduce( (Sum, product) => Sum + actions, 0)
+          order.productsTotal = order.products.reduce( (Sum, product) => Sum + (product.price * product.quantity), 0)
           //order.poducts_count = dateDiff(Date.parse(order.order_close_time), new Date());
           return order;
       }

@@ -3,7 +3,7 @@ import couriersService from '../services/couriers.service.js';
 //import isOutDated from '../utils/isOutDated.js';
 //import { BookingType } from './../types/types';
 //import { AppThunk, RootState } from './createStore.ts';
-const DEBUG = false;
+const DEBUG = true;
 const couriersSlice = createSlice({
   name: 'couriers',
   initialState: {
@@ -50,7 +50,10 @@ const couriersSlice = createSlice({
       state.entities = state.entities.filter(courier => courier._id !== action.payload);
       state.error = null;
     },
-
+    // couriersSort: (state) => {
+    //   if(DEBUG) console.log('=====couriersSortReceived====', sort_keys);
+    //   state.entities = state.entities.sort( (a, b) => (( sort_keys[a.status] && sort_keys[b.status] ) && (a.orders.length < b.orders.length) ) );
+    // },
     courierSetShowRotes: (state, action) => {
       const status = action.payload.status;
       const courierIndex = state.entities.findIndex(courier => {
@@ -89,7 +92,7 @@ const {
   couriersUpdateOne,
   mapRoutesReceived,
   mapRouteReceived,
-  courierCreated,
+  //couriersSort,
   courierRemoved,
   courierCreateRequested,
   courierCreateRequestedFailed,
@@ -98,18 +101,28 @@ const {
 
 const removeBookingRequested = createAction('couriers/removeBookingRequested');
 const removeBookingRequestedFailed = createAction('couriers/removeBookingRequestedFailed');
-const sort_keys = {
+
+/* ф-я сортировки курьеров */
+const sort_couriers = (couriers, isLoading) => {
+  const sort_keys = {
   online : 0,
   offline: 1,
 }
+  //console.log('sort_couriers', isLoading, sort_keys, couriers)
+  let c = [...couriers]
+  return c.sort( (a, b) => ( sort_keys[a.status] - sort_keys[b.status] || a.orders.length - b.orders.length ) );
+
+}
+
 export const loadCouriersList = () => async (dispatch, getState) => {
   dispatch(couriersRequested());
   try {
     const { content } = await couriersService.getAll();
 
     //сортируем по статусу и количеству заказов
-    content.data.sort( (a, b) => (( sort_keys[a.status] - sort_keys[b.status] ) || (a.orders.length < b.orders.length) ) );
-    //Создаём параметр show_route
+    //content.data.sort( (a, b) => (( sort_keys[a.status] - sort_keys[b.status] ) || (a.orders.length < b.orders.length) ) );
+    
+    //Создаём параметр show_route (показ маршрута на карте)
     content.data.map(
       courier => {
         courier.show_route = false;
@@ -121,6 +134,7 @@ export const loadCouriersList = () => async (dispatch, getState) => {
     if(DEBUG) console.log('content couriers ', content);
     dispatch(mapRoutesReceived(content.data || []));
     dispatch(couriersReceived(content.data || []));
+    //dispatch(couriersSort());
 
     
   } catch (error) {
@@ -134,6 +148,7 @@ export const reLoadCourier = (payload) => async dispatch => {
   try {
     const { content } = await couriersService.getById(payload);
     dispatch(couriersUpdateOne(content.data || []));
+    //dispatch(couriersSort());
   } catch (error) {
     if(DEBUG) console.log('reLoadCourier error',error);
   }
@@ -143,6 +158,7 @@ export const reLoadCourier = (payload) => async dispatch => {
 export const updateCourier = (payload) => async dispatch => { 
   console.log('updateCourier payload STOP', payload)
   dispatch(couriersUpdateOne(payload || {}));
+  //dispatch(couriersSort());
 }
 
 export const updateCourierField = (payload) => async dispatch => { 
@@ -162,6 +178,7 @@ export const courierActions = (payload) => async dispatch => {
         try {
           const { content } = await couriersService.takeOrder(payload);
           dispatch(couriersUpdateOne(content.data || []));
+          //dispatch(couriersSort());
         } catch (error) {
           if(DEBUG) console.log('courierActionsTake error',error);
         }
@@ -171,6 +188,7 @@ export const courierActions = (payload) => async dispatch => {
         try {
           const { content } = await couriersService.takeOffOrder(payload);
           dispatch(couriersUpdateOne(content.data || []));
+         // dispatch(couriersSort());
         } catch (error) {
           if(DEBUG) console.log('courierActionsTake error',error);
         }
@@ -180,6 +198,7 @@ export const courierActions = (payload) => async dispatch => {
         try {
           const { content } = await couriersService.canselOrder(payload);
           dispatch(couriersUpdateOne(content.data || []));
+         // dispatch(couriersSort());
         } catch (error) {
           if(DEBUG) console.log('courierActionsTake error',error);
         }
@@ -189,6 +208,7 @@ export const courierActions = (payload) => async dispatch => {
         try {
           const { content } = await couriersService.deliveredOrder(payload);
           dispatch(couriersUpdateOne(content.data || []));
+          //dispatch(couriersSort());
         } catch (error) {
           if(DEBUG) console.log('courierActionsTake error',error);
         }
@@ -238,7 +258,7 @@ export const showCourierRoutes  = (payload) => courierSetShowRotes(payload);
 //     }
 //   };
 
-export const getCouriers = () => (state) => state.couriers.entities;
+export const getCouriers = () => (state) => sort_couriers(state.couriers.entities, state.couriers.isLoading);
 export const getCouriersLoadingStatus = () => (state) => state.couriers.isLoading;
 export const getBookingCreatedStatus = () => (state) => state.couriers.createBookingLoading;
 export const getCouriersByUserId = (userId) => (state) => {

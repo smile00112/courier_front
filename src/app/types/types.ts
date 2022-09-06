@@ -35,7 +35,7 @@ export type OrderProducts = {
   id: string;
   name: string;
   price: string;
-  quiantity: string;
+  quantity: string;
 }
 export type OrderType = {
   _id: number;

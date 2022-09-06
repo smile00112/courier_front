@@ -21,6 +21,7 @@ const CouriersList: React.FC<CourierListProps> = ({ couriers, scm, scm_order_id,
     setCouriersFilter(new_filter);
   };
 
+  //фильтруем по транспорту
   const filter_couriers = (couriers, couriersFilter) => couriers.filter(courier => (courier.transport === couriersFilter || !couriersFilter));
   
 

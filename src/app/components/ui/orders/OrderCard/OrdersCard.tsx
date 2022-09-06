@@ -108,7 +108,7 @@ const comfortIconsMap: { [x: string]: JSX.Element } = {
                       order.products.map(product => (
                         <ListItemButton key={product.id} sx={{ pl: 4 }} >
                               <div className='product-name'>{product.name}</div>
-                              <div className='product-quiantity'>{product.quiantity} шт</div>
+                              <div className='product-quantity'>{product.quantity} шт</div>
                         </ListItemButton>
                     ))}
                    

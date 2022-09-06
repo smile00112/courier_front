@@ -61,7 +61,8 @@ const CourierCard: React.FC<CourierListProps> = ({ courier, scm, scm_order_id, t
   const get_bg_color = () => {
     if(!isOnline) return 'bg-black';
     if( courier.orders.length <=1 ) return 'bg-green';
-    if( courier.orders.length <=2 ) return 'bg-red';
+    if( courier.orders.length === 2 ) return 'bg-yellow'; 
+    if( courier.orders.length > 2 ) return 'bg-red';
     
     return 'bg-grey';
   }

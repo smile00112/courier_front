@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 // import { loadLikesList } from '../../../store/likes';
 // import { loadReviewsList } from '../../../store/reviews';
 // import { loadRoomsList } from '../../../store/rooms';
-
+const DEBUG = true;
 declare global {
   interface window {
   Echo:any;
@@ -29,31 +29,39 @@ const Soskets = () => {
       progress: undefined,
       });
   }
-  //  console.log('Soskets Component');
-  // useEffect(() => {
-  //   dispatch(loadOrdersList());
-  //   dispatch(loadUsersList());
-  //   dispatch(loadCouriersList());
-  //   // dispatch(loadLikesList());
-  //   // dispatch(loadReviewsList());
-  //   // dispatch(loadBookingsList());
-  // }, [isLoggedIn]);
+  //toast.error('Something was wrong. Try it later');
 
-    //toast.error('Something was wrong. Try it later');
 
-  /**Сокеты**/
+  /**Сокеты канал курьеров**/
+  window['Echo'].channel('operator_couriers')  
+  .listen('UpdateCourierEvent', (e) => {
+    // show_toast('Новый заказ №'+e.order.id);
+     if(DEBUG) console.log('UpdateCourierEvent__');
+     if(DEBUG) console.error(e);
+     switch (e.event_type){
+      case 'new_transport':
+        show_toast(`${e.courier.fio} сменил транспорт на ${e.courier.transport}`);
+      break;
+      case 'new_status':
+        show_toast(`${e.courier.fio} сменил статус на ${e.courier.status}`);
+      break;      
+     }
+   })
+
+  /**Сокеты канал заказов**/
   window['Echo'].channel('operator_orders')
   .listen('NewOrderEvent', (e) => {
     dispatch(sosketNewOrder(e));
     show_toast('Новый заказ №'+e.order.id);
-    console.log('NewOrderEvent');
-    console.error(e);
+    if(DEBUG) console.log('NewOrderEvent');
+    if(DEBUG) console.error(e);
   })
+
   .listen('UpdateOrderEvent', (e) => {
       //this.updateOrderEvent(e);
-      console.log('UpdateOrderEvent__' + e.event_type);
-      console.error(e);
-      // смотреть  event_type  : 'finishOrder', 'canselOrder', takeOrder
+      if(DEBUG) console.log('UpdateOrderEvent__' + e.event_type);
+      if(DEBUG) console.error(e);
+
       dispatch(sosketUpdateOrder({data: e.order}));
       dispatch(updateCourier(e.courier));
 
@@ -72,17 +80,18 @@ const Soskets = () => {
         break;
         case 'finishOrder':
           show_toast(`${e.courier.fio} доставил заказ №${e.order.id}`);
-        break;     
+        break;    
         default:
           show_toast(`Статус заказа №${e.order.id} поменялся на ${e.order.status}`);
-        break;              
+        break;   
+
       }
 
   })
   .listen('DeleteOrderEvent', (e) => {
       //this.deleteOrderEvent(e);
-      console.log('DeleteOrderEvent');
-      console.error(e);
+      if(DEBUG) console.log('DeleteOrderEvent');
+      if(DEBUG) console.error(e);
   })
   .listen('OrderTaked', (e) => {
       //this.deleteOrderEvent(e);
@@ -91,8 +100,8 @@ const Soskets = () => {
       dispatch(sosketUpdateOrder(e.order));
 
       show_toast(`Заказ №${e.order.id} взят ${e.courier.fio}`);
-      console.log('OrderTakedEvent');
-      console.error(e);
+      if(DEBUG) console.log('OrderTakedEvent');
+      if(DEBUG) console.error(e);
   });
 
 
