@@ -7,13 +7,14 @@ type CourierListProps = {
   couriers: CourierType[];
   scm: boolean,
   scm_order_id: number,
+  activeCourier: number,  
   setCourierToOrder: (scourier_id: number) => React.MouseEventHandler<HTMLLIElement>;//React.MouseEvent<HTMLElement>,  
   targerCourier: (courier_id: number, status: boolean) => void;
 };
 
 
 
-const CouriersList: React.FC<CourierListProps> = ({ couriers, scm, scm_order_id, setCourierToOrder, targerCourier }) => {
+const CouriersList: React.FC<CourierListProps> = ({ couriers, scm, scm_order_id, activeCourier, setCourierToOrder, targerCourier }) => {
 
   const [couriersFilter, setCouriersFilter] = React.useState('');
   const couriersFilterHandle = (new_filter: string) => (event: React.MouseEvent<unknown>) => {
@@ -38,7 +39,7 @@ const CouriersList: React.FC<CourierListProps> = ({ couriers, scm, scm_order_id,
           </div>
       </li>
       {filter_couriers(couriers, couriersFilter).map(courier => {
-       var itemClass = 'couriers__list-item';// + ( ( scm && (courier.id !== scm_order_id) ) ? ' disabled' : '' ) 
+       var itemClass = 'couriers__list-item '+ ( ( courier.id === activeCourier ) ? ' active' : '' ) ;// + ( ( scm && (courier.id !== scm_order_id) ) ? ' disabled' : '' ) 
        return (
         <li key={'cour_'+courier.id} className={itemClass} onClick={setCourierToOrder(courier.id)}>
           <CourierCard courier={courier} scm={scm} scm_order_id={scm_order_id} targerCourier={targerCourier}/>

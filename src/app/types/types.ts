@@ -75,6 +75,7 @@ export type CourierType = {
   rating: string; 
   status: string;   
   transport: string;
+  current_order: number | null,
   orders: Array<OrderTypeMini>,
   show_route: boolean,
 };

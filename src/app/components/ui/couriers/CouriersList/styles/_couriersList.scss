@@ -18,7 +18,10 @@
 .couriers__list-item.disabled{
   opacity: 0.2;
 }
-
+.couriers__list-item.active .courier-card{
+  border: 2px solid #b602f4;
+  box-shadow: 0px 0px 5px 2px rgb(182 5 243 / 84%);
+}
 
 .couriers-sorting{
 

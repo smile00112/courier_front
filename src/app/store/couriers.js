@@ -13,6 +13,7 @@ const couriersSlice = createSlice({
     error: null,
     lastFetch: null,
     mapRoutes: [],
+    activeCourier: null,
   },
   reducers: {
     couriersRequested: state => {
@@ -23,7 +24,6 @@ const couriersSlice = createSlice({
       state.lastFetch = Date.now();
       state.isLoading = false;
     },
- 
     couriersUpdateOne: (state, action) => {
       const courierIndex = state.entities.findIndex(courier => courier._id === action.payload._id);
       state.entities[courierIndex] = action.payload;
@@ -79,7 +79,9 @@ const couriersSlice = createSlice({
       if(DEBUG) console.log('=====mapRouteReceived====', action, state.mapRoutes);
       state.mapRoutes[action.payload.index] = action.payload.data;
     },  
-
+    setActiveCourier: (state, action) => {
+      state.activeCourier = action.payload;
+    }
   },
 });
 
@@ -92,6 +94,7 @@ const {
   couriersUpdateOne,
   mapRoutesReceived,
   mapRouteReceived,
+  setActiveCourier,
   //couriersSort,
   courierRemoved,
   courierCreateRequested,
@@ -108,7 +111,7 @@ const sort_couriers = (couriers, isLoading) => {
   online : 0,
   offline: 1,
 }
-  //console.log('sort_couriers', isLoading, sort_keys, couriers)
+
   let c = [...couriers]
   return c.sort( (a, b) => ( sort_keys[a.status] - sort_keys[b.status] || a.orders.length - b.orders.length ) );
 
@@ -154,15 +157,20 @@ export const reLoadCourier = (payload) => async dispatch => {
   }
 };
 
+export const setCourierActive = (payload) => async dispatch => { 
+  if(DEBUG) console.log('setActiveCourier payload ', payload)
+  dispatch(setActiveCourier(payload || null));
+  //dispatch(couriersSort());
+}
 
 export const updateCourier = (payload) => async dispatch => { 
-  console.log('updateCourier payload STOP', payload)
+  if(DEBUG) console.log('updateCourier payload STOP', payload)
   dispatch(couriersUpdateOne(payload || {}));
   //dispatch(couriersSort());
 }
 
 export const updateCourierField = (payload) => async dispatch => { 
-  console.log('updateCourierField payload STOP', payload);
+  if(DEBUG) console.log('updateCourierField payload STOP', payload);
   try {
     const { content } = await couriersService.updateField(payload);
     dispatch(couriersUpdateOne(content.data || []));
@@ -258,6 +266,7 @@ export const showCourierRoutes  = (payload) => courierSetShowRotes(payload);
 //     }
 //   };
 
+export const getActiveCourier = () => (state) => state.couriers.activeCourier;
 export const getCouriers = () => (state) => sort_couriers(state.couriers.entities, state.couriers.isLoading);
 export const getCouriersLoadingStatus = () => (state) => state.couriers.isLoading;
 export const getBookingCreatedStatus = () => (state) => state.couriers.createBookingLoading;

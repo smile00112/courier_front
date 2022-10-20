@@ -18,14 +18,36 @@
     opacity: 0.2;
   }
 
+  &.courier_active_mode
+  {
+    .orders__list-item.free_orders:not(.courier_active){
+      opacity: 0.2;
+    }
+    .orders__list-item.taked_orders:not(.courier_active){
+      display: none;
+    }
+  }  
   .orders-sorting{
     width: 277px;
   }
 
-  .orders__list-item.disabled{
+  .orders__list-item.taked_orders.disabled{
+    display: none;
+  }
+  .orders__list-item.taked_orders.current_order .order-card{
+    border: 2px solid #51ff00a6;
+    box-shadow: 0px 0px 2px 1px #51ff00a6;
+  }
+
+  
+  .orders__list-item.free_orders.disabled{
     opacity: 0.2;
   }
+
+
+  
 }
+
 
 .orders-sorting__warapper{
   display: flex;

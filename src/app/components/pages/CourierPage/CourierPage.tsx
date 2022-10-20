@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 //import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../../store/createStore';
 //import { getIsLoggedIn } from '../../../store/users';
-import { getOrders, getOrdersLoadingStatus, enableModeSelectCourier, disableModeSelectCourier, orderDeliveryTimerUpdate, getSelectCourierModeStatus, getSelectCourierModeOrderId, orderToCourier } from '../../../store/orders';
-import { getCouriers, getCouriersLoadingStatus, showCourierRoutes, reLoadCourier, courierActions, updateCourierField } from '../../../store/couriers';
+import { getOrders, getOrdersLoadingStatus, enableModeSelectCourier, disableModeSelectCourier, orderDeliveryTimerUpdate, getSelectCourierModeStatus, getSelectCourierModeOrderId, orderToCourier, updateCourierCurrentOrderInOrder } from '../../../store/orders';
+import { getCouriers, getCouriersLoadingStatus, showCourierRoutes, reLoadCourier, courierActions, setCourierActive, getActiveCourier, updateCourierField } from '../../../store/couriers';
 import OrdersList from '../../ui/orders/OrdersList';
 import OrdersListSkeleton from '../../ui/orders/OrdersList/OrdersListSkeleton';
 import CouriersListTest from '../../ui/couriersTest/CouriersListTest';
@@ -28,6 +28,7 @@ const CourierPage = () => {
   const couriersIsLoading = useSelector(getCouriersLoadingStatus());
   const scm_mode = useSelector(getSelectCourierModeStatus());
   const scm_order_id = useSelector(getSelectCourierModeOrderId());
+  const activeCourier = useSelector(getActiveCourier());
 
   const [courier_action_mode_obj , setCourier_mode] = React.useState({courier_action_mode: '', action_courier_id: 0});
 
@@ -46,6 +47,7 @@ const CourierPage = () => {
   }
   
   const targerCourier:ClickTargerCourier=($courier_id, $status) =>{
+    dispatch( setCourierActive( $courier_id === activeCourier ? null : $courier_id ) );
     dispatch( showCourierRoutes( {courier_id: $courier_id, status: $status} ) );
   }
   
@@ -59,6 +61,8 @@ const CourierPage = () => {
   const setCourierField:ClickSetCourierField=($courier_id, $field, $value) =>{
     console.warn('setCourierField', $courier_id, $field, $value);
     dispatch(updateCourierField({courier_id: $courier_id, field: $field, value: $value}))
+    /* Если обновляется текущий заказ то обновляем его в поле курьера заказа */
+    dispatch(updateCourierCurrentOrderInOrder({courier_id: $courier_id, field: $field, value: $value}))
   }
   
   const selectOrderForAction = ($order_id:number) =>{
@@ -92,7 +96,15 @@ const CourierPage = () => {
         // dispatch( disableModeSelectCourier( {status: status, order_id: $order_id} ) );
      }
   }
-  
+
+  //Обратный отсчет времени заказа
+  React.useEffect(()=>{
+    window.setInterval(()=>{
+      dispatch(orderDeliveryTimerUpdate());
+   }, 14000)
+  },[]);
+
+
   return (
     <div className="main-home__wrapper">
       
@@ -106,6 +118,7 @@ const CourierPage = () => {
           scm={scm_mode} 
           scm_order_id={scm_order_id} 
           courier_action_mode = {courier_action_mode_obj}
+          activeCourier = {activeCourier}
           setCourierToOrder={setCourierToOrder} 
           targerCourier={targerCourier}
           actionModeUpdate = {setCourierActionMode} 
@@ -123,6 +136,8 @@ const CourierPage = () => {
                   scm={scm_mode} 
                   scm_order_id={scm_order_id}
                   courier_action_mode={courier_action_mode_obj}
+                  activeCourier={activeCourier}
+
                   scmUpdate={scm_update}
                   selectOrderForAction={selectOrderForAction}
 
@@ -138,6 +153,8 @@ const CourierPage = () => {
                     scm={scm_mode} 
                     scm_order_id={scm_order_id} 
                     courier_action_mode={courier_action_mode_obj}
+                    activeCourier={activeCourier}
+
                     scmUpdate={scm_update}
                     selectOrderForAction={selectOrderForAction}
                 />

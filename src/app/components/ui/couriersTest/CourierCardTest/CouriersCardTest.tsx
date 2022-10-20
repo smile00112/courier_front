@@ -72,7 +72,10 @@ const CourierCardTest: React.FC<CourierListProps> = ({ courier, scm, scm_order_i
     const value = event.target.value ;
     courierFieldUpdate(courier.id, 'status', value)
   };
-
+  const current_orderHandleChange =  (event: SelectChangeEvent<string>) => {
+    const value = event.target.value ;
+    courierFieldUpdate(courier.id, 'current_order', value)
+  };
   const courierHandle = ( type: string) => (event: React.MouseEvent<unknown>) => {
     actionModeUpdate(courier.id, type);
     //alert(courier.id);
@@ -123,6 +126,7 @@ const CourierCardTest: React.FC<CourierListProps> = ({ courier, scm, scm_order_i
     setOpen(!open);
   };
 
+  const current_order:string = String(courier.current_order || '') ;
 
   return (
     <div className={'courier-card '+ (elActive === true ? "active " : "") + get_bg_color()} onClick={ targerCourierHandle(courier.id, !courier.show_route) }>
@@ -181,15 +185,39 @@ const CourierCardTest: React.FC<CourierListProps> = ({ courier, scm, scm_order_i
               </Select>
 
             </li>
+
+            <li>
+              <InputLabel id="current_order-select-label" className="courier-action-input-label">Текущий заказ</InputLabel>
+              <Select
+                labelId="current_order-select-label"
+                id="current_order-select"
+                key={'kkk'+courier.id}
+                value={current_order}
+                label="current_order"
+                onChange={current_orderHandleChange}
+                className="courier-action-select"
+              >
+                <MenuItem value=''>Не выбран</MenuItem>
+                {
+                  courier.orders.map(order => <MenuItem key={(order.id+'_'+courier.id)} value={order.id} >№{order.number} {order.address_to.streetAddress}</MenuItem>)
+                }
+                
+               
+              </Select>
+
+            </li>
+
             <li><Button variant="contained" className="action-btn" onClick={courierHandle('take')} >Взять заказ</Button></li>
             <li><Button variant="contained" color="secondary" className="action-btn" onClick={courierHandle('takeOff')} >Получить заказ на руки</Button></li>
             <li><Button variant="contained" color="success" className="action-btn" onClick={courierHandle('orderDelivered')} >Заказ доставлен</Button></li>
             <li><Button variant="contained" color="error" className="action-btn" onClick={courierHandle('cansel')} >Отменить заказ</Button></li>
 
             
-            {/* <li>{ courier.last_name } {courier.first_name}</li>
-            <li><div className='courier_targer' ><TargetIcon/></div></li> 
-            <li> {courier.show_route ? 'on' : ''} </li>            */}
+            {/* 
+              <li>{ courier.last_name } {courier.first_name}</li>
+              <li><div className='courier_targer' ><TargetIcon/></div></li> 
+              <li> {courier.show_route ? 'on' : ''} </li>
+            */}
           </ul>
         </div>
 

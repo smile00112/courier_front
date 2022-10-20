@@ -8,13 +8,14 @@ type OrderListProps = {
   orders: OrderType[],
   scm: boolean,
   scm_order_id: number,
+  activeCourier: number,  
   courier_action_mode: {courier_action_mode: string, action_courier_id: number}, 
   scmUpdate: (status: boolean, order_id: number) => void;//React.MouseEvent<HTMLElement>,  
   selectOrderForAction: (order_id: number) => void;  
 };
 
 
-const OrdersList: React.FC<OrderListProps> = ({ type, orders, scm, scm_order_id, courier_action_mode, scmUpdate, selectOrderForAction }) => {
+const OrdersList: React.FC<OrderListProps> = ({ type, orders, scm, scm_order_id, courier_action_mode, activeCourier, scmUpdate, selectOrderForAction }) => {
   const free = (type === 'free') ? true : false;
   
   const [ordersFilter, setCouriersFilter] = React.useState(3);
@@ -36,8 +37,10 @@ const OrdersList: React.FC<OrderListProps> = ({ type, orders, scm, scm_order_id,
       selectOrderForAction(order_id);
   };
 
+  const contenerClass = 'orders__list' + ( activeCourier && !free ? ' courier_active_mode' : '' );
+
   return (
-    <ul className='orders__list'>
+    <ul className={contenerClass}>
       { 
       (!free) ? (
         <li className="orders-sorting">
@@ -72,6 +75,7 @@ const OrdersList: React.FC<OrderListProps> = ({ type, orders, scm, scm_order_id,
 
           if(!free){
             itemClass+= ( courier_action_mode.courier_action_mode && ( courier_action_mode.courier_action_mode === 'take' ||  courier_action_mode.action_courier_id !== order.courier_id ) ) ? ' disabled' : '' ;
+            itemClass+= ( activeCourier && ( order.courier_id === activeCourier ) ? ' courier_active'+( (order.id === order.courier.current_order) ? ' current_order' : '') : '' );
             return (
               <li key={'order_taked_' + order._id} className={itemClass} onClick={clickOrderHandle(order.id)}>
                 <OrderCardTaked free={free} order={order} scm={scm} scm_order_id={scm_order_id} scmUpdate={scmUpdate}/>

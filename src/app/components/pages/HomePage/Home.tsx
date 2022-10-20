@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../../store/createStore';
 //import { getIsLoggedIn } from '../../../store/users';
 import { getOrders, getOrdersLoadingStatus, enableModeSelectCourier, disableModeSelectCourier, orderDeliveryTimerUpdate, getSelectCourierModeStatus, getSelectCourierModeOrderId, orderToCourier } from '../../../store/orders';
-import { getCouriers, getCouriersLoadingStatus, showCourierRoutes, reLoadCourier, updateMapRoute, getMapRoutes } from '../../../store/couriers';
+import { getCouriers, getCouriersLoadingStatus, showCourierRoutes, reLoadCourier, setCourierActive, getActiveCourier,  updateMapRoute, getMapRoutes } from '../../../store/couriers';
 import OrdersList from '../../ui/orders/OrdersList';
 import OrdersListSkeleton from '../../ui/orders/OrdersList/OrdersListSkeleton';
 import CouriersList from '../../ui/couriers/CouriersList';
@@ -18,6 +18,7 @@ const Home = () => {
   const orders = useSelector(getOrders());
   const couriers = useSelector(getCouriers());
   const mapRoutes = useSelector(getMapRoutes());
+  const activeCourier = useSelector(getActiveCourier());
 
   const dispatch = useAppDispatch();
 
@@ -35,12 +36,14 @@ const Home = () => {
  // console.warn('ordersListCrop2222', orders);
 
 //Обратный отсчет времени заказа
-//  React.useEffect(()=>{
-//     window.setInterval(()=>{
-//       dispatch(orderDeliveryTimerUpdate());
-//    }, 14000)
+ React.useEffect(()=>{
+    window.setInterval(()=>{
+      dispatch(orderDeliveryTimerUpdate());
+    }, 14000)
+    },
+    []
+  )
 
-//   },[])
   type ClickHandler = ($order_id: number) => (e: React.MouseEvent) => void;
   type ClickTargerCourier = ($courier_id: number, $status: boolean) => void;
   type updateRouteType = (index: number, courier_id: number, status:boolean, route:any, points: any[]) => void;
@@ -54,6 +57,7 @@ const Home = () => {
   }
   
   const targerCourier:ClickTargerCourier=($courier_id, $status) =>{
+    dispatch( setCourierActive( $courier_id === activeCourier ? null : $courier_id ) );
     dispatch( showCourierRoutes( {courier_id: $courier_id, status: $status} ) );
   }
 
@@ -91,11 +95,12 @@ const Home = () => {
               <OrdersListSkeleton pageSize={pageSize} /> 
               : 
               <OrdersList 
-                type="free" 
+                type="free"
                 orders={orders} 
                 scm={scm_mode} 
                 scm_order_id={scm_order_id} 
                 courier_action_mode={courier_action_mode}
+                activeCourier={activeCourier}
                 scmUpdate={scm_update}
                 selectOrderForAction={selectOrderForAction}
               />}
@@ -107,6 +112,7 @@ const Home = () => {
                   couriers={couriers} 
                   scm={scm_mode} 
                   scm_order_id={scm_order_id} 
+                  activeCourier={activeCourier}
                   setCourierToOrder={setCourierToOrder} 
                   targerCourier={targerCourier}
               />
@@ -120,6 +126,7 @@ const Home = () => {
               orders={orders} 
               scm={scm_mode} 
               scm_order_id={scm_order_id}
+              activeCourier={activeCourier}
               courier_action_mode={courier_action_mode}
               scmUpdate={scm_update}
               selectOrderForAction={selectOrderForAction}

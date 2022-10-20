@@ -60,7 +60,12 @@ const ordersSlice = createSlice({
         state.entities.map(
           order => dateDiff(Date.parse(order.order_close_time), new Date())
         );
-    }
+    },
+    updateCourierCurrentOrder: (state, action) => {
+        // state.entities.map(
+        //   order => dateDiff(Date.parse(order.order_close_time), new Date())
+        // );
+    }    
     
   },
 });
@@ -78,7 +83,7 @@ const {
   orderSelectCourierModeDisable, 
   orderSetCourierToOrder,
   orderNew,
-
+  updateCourierCurrentOrder,
 } = actions;
 
 const addBookingOrderRequested = createAction('orders/addBookingOrderRequested');
@@ -178,6 +183,12 @@ export const removeBookingOrder =
         dispatch(orderUpdateRequestedFailed());
       }
   };
+  
+  export const updateCourierCurrentOrderInOrder = (payload) => async dispatch => { 
+    if(DEBUG) console.log('updateCourierCurrentOrderInOrder payload STOP', payload);
+    dispatch(updateCourierCurrentOrder(payload));
+
+  }
 
   
 export const getOrders = () => (state) => state.orders.entities;

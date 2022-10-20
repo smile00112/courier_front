@@ -8,6 +8,7 @@ type CourierListProps = {
   scm: boolean,
   scm_order_id: number,
   courier_action_mode: {courier_action_mode: string, action_courier_id: number},
+  activeCourier: number,  
   setCourierToOrder: (scourier_id: number) => React.MouseEventHandler<HTMLLIElement>;//React.MouseEvent<HTMLElement>,  
   targerCourier: (courier_id: number, status: boolean) => void;
   actionModeUpdate: (courier_id: number, status: string) => void;  
@@ -17,7 +18,7 @@ type CourierListProps = {
 
 
 
-const CouriersList: React.FC<CourierListProps> = ({ couriers, scm, scm_order_id, courier_action_mode, setCourierToOrder, targerCourier, actionModeUpdate, courierFieldUpdate }) => {
+const CouriersList: React.FC<CourierListProps> = ({ couriers, scm, scm_order_id, courier_action_mode, activeCourier, setCourierToOrder, targerCourier, actionModeUpdate, courierFieldUpdate }) => {
 
   const [couriersFilter, setCouriersFilter] = React.useState('');
   const couriersFilterHandle = (new_filter: string) => (event: React.MouseEvent<unknown>) => {
@@ -41,7 +42,7 @@ const CouriersList: React.FC<CourierListProps> = ({ couriers, scm, scm_order_id,
           </div>
       </li>
       {filter_couriers(couriers, couriersFilter).map(courier => {
-       var itemClass = 'couriers__list-item';// + ( ( scm && (courier.id !== scm_order_id) ) ? ' disabled' : '' ) 
+       var itemClass = 'couriers__list-item '+ ( ( courier.id === activeCourier ) ? ' active' : '' );// + ( ( scm && (courier.id !== scm_order_id) ) ? ' disabled' : '' ) 
        return (
         <li key={'cour_'+courier.id} className={itemClass} onClick={setCourierToOrder(courier.id)}>
           <CourierCardTest 
