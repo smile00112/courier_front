@@ -34,8 +34,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
 
+}
+.footer-bottom p{
+  min-width: 25px;
+}
 .footer-social {
   display: flex;
   align-items: center;

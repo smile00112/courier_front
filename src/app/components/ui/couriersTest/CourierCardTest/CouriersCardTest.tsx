@@ -10,8 +10,9 @@ import {DotsIcon, WalkerIcon, CarIcon, BicycleIcon, TargetIcon, TimeIcon } from 
 //import ImageSlider from '../../../common/ImageSlider';
 //import Rating from '../../../common/Rating';
 import { CourierType } from '../../../../types/types';
-import { Select, MenuItem, InputLabel, SelectChangeEvent, Button } from '@mui/material';
+//import { Select, MenuItem, InputLabel, SelectChangeEvent, Button, TextField } from '@mui/material';
 
+import { useGeolocated } from "react-geolocated";
 
 // import ListSubheader from '@mui/material/ListSubheader';
 
@@ -33,9 +34,20 @@ type declOfNumProps = (n: number,   titles: String[]) => String;
 //   hasWorkSpace: <ComputerIcon />,
 // };
 
-
 const CourierCardTest: React.FC<CourierListProps> = ({ courier, scm, scm_order_id, courier_action_mode, targerCourier, actionModeUpdate, courierFieldUpdate } ) => {
   
+/*//координаты
+
+const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+useGeolocated({
+    positionOptions: {
+        enableHighAccuracy: false,
+    },
+    userDecisionTimeout: 5000,
+});
+console.log('coords, isGeolocationAvailable, isGeolocationEnabled', coords, isGeolocationAvailable, isGeolocationEnabled)
+
+*/
   const isOnline = (courier.status === 'online') ? true : false;
 
   const transportIcon = () => {
@@ -205,6 +217,9 @@ const CourierCardTest: React.FC<CourierListProps> = ({ courier, scm, scm_order_i
                
               </Select>
 
+            </li>
+            <li>
+              <TextField id="coordinates" label="Координаты" variant="standard" />
             </li>
 
             <li><Button variant="contained" className="action-btn" onClick={courierHandle('take')} >Взять заказ</Button></li>

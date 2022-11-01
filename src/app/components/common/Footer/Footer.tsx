@@ -38,6 +38,8 @@ const Footer = () => {
       <Container>
         <div className='footer-bottom'>
           <p className='footer-copyright'>Copyright © 2022 Dolinger. Все права защищены.</p>
+          <p className='footer-link'><a href="/">Оператор</a></p>
+          <p className='footer-link'><a href="/courier">Курьеры</a></p>
           {/* <Link underline='none' href='https://github.com/Solexofficial' rel='noopener noreferrer' target='_blank'>
             <div className='footer-social'>
               <GitHub />
@@ -49,5 +51,5 @@ const Footer = () => {
     </footer>
   );
 };
-
+ 
 export default React.memo(Footer);
