@@ -1,12 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { sosketNewOrder, sosketUpdateOrder } from '../../../store/orders';
-import { updateCourier } from '../../../store/couriers';
+import { sosketNewOrder, sosketUpdateOrder, reLoadOrder } from '../../../store/orders';
+import {reLoadCourier, updateCourier} from '../../../store/couriers';
 import { toast } from 'react-toastify';
 
-// import { loadLikesList } from '../../../store/likes';
-// import { loadReviewsList } from '../../../store/reviews';
-// import { loadRoomsList } from '../../../store/rooms';
 const DEBUG = true;
 declare global {
   interface window {
@@ -46,6 +43,8 @@ const Soskets = () => {
      switch (e.event_type){
       case 'new_transport':
         show_toast(`${e.courier.fio} сменил транспорт на ${e.courier.transport}`, 'info');
+        dispatch(reLoadCourier( e.courier.id ));
+
       break;
       case 'new_status':
         show_toast(`${e.courier.fio} сменил статус на ${e.courier.status}`, 'info');
@@ -67,8 +66,10 @@ const Soskets = () => {
       if(DEBUG) console.log('UpdateOrderEvent__' + e.event_type);
       if(DEBUG) console.error(e);
 
-      dispatch(sosketUpdateOrder({data: e.order}));
-      dispatch(updateCourier(e.courier));
+      //dispatch(sosketUpdateOrder({data: e.order}));
+      dispatch(reLoadOrder( e.order.id ));
+      //dispatch(updateCourier(e.courier));
+      dispatch(reLoadCourier( e.courier.id ));
 
       switch (e.event_type){
         case 'takeOrder':

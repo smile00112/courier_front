@@ -1,28 +1,28 @@
 //import { BookingType } from '../types/types';
 import httpService from './http.service';
 
-const bookingEndPoint = 'operator/couriers/';
+const couriersEndPoint = 'operator/couriers';
 
 const bookingService = {
   getAll: async () => {
-    const { data } = await httpService.get(bookingEndPoint);
+    const { data } = await httpService.get(couriersEndPoint);
     return data;
   },
   create: async (payload) => {
-    const { data } = await httpService.post(bookingEndPoint, payload);
+    const { data } = await httpService.post(couriersEndPoint, payload);
     return data;
   },
   
   remove: async (id) => {
-    await httpService.delete(bookingEndPoint + id);
+    await httpService.delete(couriersEndPoint + '/' + id);
     return id;
   },
   getById: async (id) => {
-    const { data } = await httpService.get(bookingEndPoint + id);
+    const { data } = await httpService.get(couriersEndPoint + '/' + id);
     return data;
   },
   getUserCouriers: async (userId) => {
-    const { data } = await httpService.get(bookingEndPoint, {
+    const { data } = await httpService.get(couriersEndPoint, {
       params: {
         orderBy: 'userId',
         equalTo: `${userId}`,
@@ -31,7 +31,7 @@ const bookingService = {
     return data;
   },
   updateField: async (payload) => {
-    const { data } = await httpService.post(bookingEndPoint + 'edit/'+ payload.courier_id, payload);
+    const { data } = await httpService.post(couriersEndPoint + '/' + 'edit/'+ payload.courier_id, payload);
     return data;
   },   
   takeOrder: async (payload) => {
@@ -52,7 +52,7 @@ const bookingService = {
   },    
      
   // getRoomBookings: async (roomId) => {
-  //   const { data } = await httpService.get(bookingEndPoint, {
+  //   const { data } = await httpService.get(couriersEndPoint, {
   //     params: {
   //       orderBy: 'roomId',
   //       equalTo: `${roomId}`,

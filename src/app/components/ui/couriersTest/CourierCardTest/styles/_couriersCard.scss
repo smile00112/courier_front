@@ -191,8 +191,18 @@
 
   .courier_targer{
     cursor: pointer;
+    transition: all 1s ease;
+
+    &:hover{
+      position: relative;
+      top: -3px;
+
+      svg{
+        opacity: 0.8;
+      }
+    }
   }
-  
+
 
   &__info-list{
     display: flex;

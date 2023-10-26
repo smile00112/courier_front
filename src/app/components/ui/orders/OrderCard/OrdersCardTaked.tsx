@@ -14,13 +14,12 @@ import { OrderType } from '../../../../types/types';
 import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
-// import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 import { getCourierById } from '../../../../store/couriers';
-// import ListSubheader from '@mui/material/ListSubheader';
+import {getPrettyTime, getPrettyDistance} from '../../../../utils/mapValuesFormat';
 
 type OrderListProps = {
   free: boolean,
@@ -87,7 +86,7 @@ const OrdersCardTaked: React.FC<OrderListProps> = ({ order, scm, scm_order_id, s
     <div className='order-card'>
 
       <div className='order-card__top'>
-        <div className="order-card__order-number">№{order.number}</div> 
+        <div className="order-card__order-number">№{order.number}</div>
         <div className="order-card__context-menu">
           <DotsIcon color={'gay'}></DotsIcon>
         </div>
@@ -95,8 +94,8 @@ const OrdersCardTaked: React.FC<OrderListProps> = ({ order, scm, scm_order_id, s
       <div className='order-card__body'>
         <div className='order-card__body-top'>
           <ul className="order-card__info-list">
-            <li><TimeIcon color={'gay'}></TimeIcon>{ order.deliveryTimer }</li>
-            <li><LocationIcon color={'gay'}></LocationIcon>...</li>
+            <li className={order.deliveryTimer < 0 ? "" : "timer_out"}><TimeIcon color={'gay'}></TimeIcon>{ order.deliveryTimerPretty }</li>
+            <li><LocationIcon color={'gay'}></LocationIcon>{getPrettyDistance( order.routeDistance )}</li>
             <li><PriceIcon color={'gay'}></PriceIcon>{order.delivery_price}₽</li>
           </ul>
         </div>
@@ -150,7 +149,10 @@ const OrdersCardTaked: React.FC<OrderListProps> = ({ order, scm, scm_order_id, s
             </div>
             <div className='order-card__bottom__courier_info__fio_time'>
               <div>{order.courier.fio}</div>
-              <div className='time'><div>{orderCourier.orders.length} достав{declOfNum(orderCourier.orders.length, ['ка', 'ки', 'ок'])}</div><div>? мин</div></div>
+              <div className='time'>
+                <div>{orderCourier.orders.length} достав{declOfNum(orderCourier.orders.length, ['ка', 'ки', 'ок'])}</div>
+                <div>{getPrettyTime(order.routeTime)}</div>
+              </div>
             </div>
             
         </div>

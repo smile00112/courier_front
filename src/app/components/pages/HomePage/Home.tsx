@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 //import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../../store/createStore';
 //import { getIsLoggedIn } from '../../../store/users';
-import { getOrders, getOrdersLoadingStatus, enableModeSelectCourier, disableModeSelectCourier, orderDeliveryTimerUpdate, getSelectCourierModeStatus, getSelectCourierModeOrderId, orderToCourier } from '../../../store/orders';
-import { getCouriers, getCouriersLoadingStatus, showCourierRoutes, reLoadCourier, setCourierActive, getActiveCourier,  updateMapRoute, getMapRoutes } from '../../../store/couriers';
+import { getOrders, getOrdersLoadingStatus, enableModeSelectCourier, disableModeSelectCourier, orderDeliveryTimerUpdate, orderRouteDistanceUpdate, orderRouteTimeUpdate, getSelectCourierModeStatus, getSelectCourierModeOrderId, orderToCourier } from '../../../store/orders';
+import { getCouriers, getCouriersLoadingStatus, showCourierRoutes, reLoadCourier, setCourierActive, getActiveCourier,  updateMapRoute, getMapRoutes, courierDeliveryDistanceUpdate, courierDeliveryTimeUpdate } from '../../../store/couriers';
 import OrdersList from '../../ui/orders/OrdersList';
 import OrdersListSkeleton from '../../ui/orders/OrdersList/OrdersListSkeleton';
 import CouriersList from '../../ui/couriers/CouriersList';
@@ -13,6 +13,8 @@ import CouriersListSkeleton from '../../ui/couriers/CouriersList/CouriersListSke
 import MapComponent from '../../common/MapComponent'; 
 
 const pageSize = 999;
+
+
 const Home = () => {
   //const isLoggedIn = useSelector(getIsLoggedIn());
   const orders = useSelector(getOrders());
@@ -46,7 +48,9 @@ const Home = () => {
 
   type ClickHandler = ($order_id: number) => (e: React.MouseEvent) => void;
   type ClickTargerCourier = ($courier_id: number, $status: boolean) => void;
-  type updateRouteType = (index: number, courier_id: number, status:boolean, route:any, points: any[]) => void;
+  type updateRouteType = (index: number, courier_id: number, status:boolean, route:any, points: any[], orders_points: any[]) => void;
+  type updateRouteTimeType = (id: number, delivery_time: string) => void;
+  type updateRouteDistanceType = (id: number, distance: string) => void;
 
   //Клик по кнопке назначить курьера
   const scm_update=(status: boolean, $order_id: number) =>{
@@ -61,9 +65,22 @@ const Home = () => {
     dispatch( showCourierRoutes( {courier_id: $courier_id, status: $status} ) );
   }
 
-  const updateRoute:updateRouteType=(index, courier_id, status, route, points) =>{
-    dispatch( updateMapRoute( {index: index, data: {courier_id, status, route, points} } ));
+  const updateRoute:updateRouteType=(index, courier_id, status, route, points, orders_points) =>{
+    dispatch( updateMapRoute( {index: index, data: {courier_id, status, route, points, orders_points} } ));
   }
+    const updateOrderRouteTime:updateRouteTimeType=( order_id, delivery_time) =>{
+        dispatch( orderRouteTimeUpdate( { order_id, delivery_time } ));
+    }
+    const updateOrderRouteDistance:updateRouteDistanceType=( order_id, delivery_distance) =>{
+        dispatch( orderRouteDistanceUpdate( { order_id, delivery_distance } ));
+    }
+
+    const updatCourierRouteTime:updateRouteTimeType=( courier_id, delivery_time) =>{
+        dispatch( courierDeliveryTimeUpdate( { courier_id, delivery_time } ));
+    }
+    const updateCourierRouteDistance:updateRouteDistanceType=( courier_id, delivery_distance) =>{
+        dispatch( courierDeliveryDistanceUpdate( { courier_id, delivery_distance } ));
+    }
 
   //Назначение курьера
   const setCourierToOrder: ClickHandler = ($courier_id) => (e) =>{
@@ -137,7 +154,22 @@ const Home = () => {
       
       <div className="map-wrapper">
 
-          {ordersIsLoading ? 'загрузка' : <MapComponent couriers={couriers} orders={orders} routes={mapRoutes} updateRoute={updateRoute} dispatch={dispatch}/> }        
+          {ordersIsLoading ? 'загрузка' :
+              <MapComponent
+                  couriers={couriers}
+                  activeCourier={activeCourier}
+                  orders={orders}
+                  routes={mapRoutes}
+                  updateRoute={updateRoute}
+                  orderRouteTimeUpdate={updateOrderRouteTime}
+                  orderRouteDistanceUpdate={updateOrderRouteDistance}
+                  courierDeliveryDistanceUpdate={updateCourierRouteDistance}
+                  courierDeliveryTimeUpdate={updatCourierRouteTime}
+
+                  dispatch={dispatch}
+
+              />
+          }
 
       </div>
     </div>

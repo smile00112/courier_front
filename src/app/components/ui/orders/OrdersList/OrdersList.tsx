@@ -2,6 +2,8 @@ import React from 'react';
 import OrderCard from '../OrderCard';
 import OrderCardTaked from '../OrderCard/OrdersCardTaked';
 import { OrderType } from '../../../../types/types';
+import { getCourierById } from '../../../../store/couriers';
+import {useSelector} from "react-redux";
 
 type OrderListProps = {
   type: string,
@@ -15,7 +17,17 @@ type OrderListProps = {
 };
 
 
-const OrdersList: React.FC<OrderListProps> = ({ type, orders, scm, scm_order_id, courier_action_mode, activeCourier, scmUpdate, selectOrderForAction }) => {
+const OrdersList: React.FC<OrderListProps> = ({
+      type,
+      orders,
+      scm,
+      scm_order_id,
+      courier_action_mode,
+      activeCourier,
+      scmUpdate,
+      selectOrderForAction
+    }) => {
+
   const free = (type === 'free') ? true : false;
   
   const [ordersFilter, setCouriersFilter] = React.useState(3);
@@ -37,7 +49,10 @@ const OrdersList: React.FC<OrderListProps> = ({ type, orders, scm, scm_order_id,
       selectOrderForAction(order_id);
   };
 
-  const contenerClass = 'orders__list' + ( activeCourier && !free ? ' courier_active_mode' : '' );
+    const contenerClass = 'orders__list' + ( activeCourier && !free ? ' courier_active_mode' : '' );
+
+    const activeCourierData = useSelector(getCourierById( activeCourier ));
+   // console.error('____activeCourierData', activeCourierData)
 
   return (
     <ul className={contenerClass}>
@@ -68,7 +83,7 @@ const OrdersList: React.FC<OrderListProps> = ({ type, orders, scm, scm_order_id,
             itemClass+= ( courier_action_mode.courier_action_mode && courier_action_mode.courier_action_mode !== 'take' ) ? ' disabled' : '' ;
             return (
               <li key={'order_not_taked_' + order._id} className={itemClass} onClick={clickOrderHandle(order.id)}>
-                <OrderCard free={free} order={order} scm={scm} scm_order_id={scm_order_id} scmUpdate={scmUpdate}/>
+                <OrderCard free={free} order={order} scm={scm} scm_order_id={scm_order_id} scmUpdate={scmUpdate} activeCourierData={activeCourierData}/>
               </li>
             )
           }

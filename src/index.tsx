@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import {Provider} from 'react-redux';
+import {Router} from 'react-router-dom';
 import App from './app/App';
-import { createStore } from './app/store/createStore';
+import {createStore} from './app/store/createStore';
 import history from './app/utils/history';
+import {DevSupport} from "@react-buddy/ide-toolbox";
+import {ComponentPreviews, useInitial} from "./dev";
 //import reportWebVitals from './reportWebVitals';
 //import Home from './app/components/pages/HomePage/Home';
 
- 
+
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 // root.render(
 //   <React.StrictMode>     
@@ -29,15 +31,20 @@ const store = createStore();
 // );  
 
 ReactDOM.render(
-  /*<React.StrictMode>*/
+    /*<React.StrictMode>*/
     <Provider store={store}>
-      <Router history={history}>
-        <App />
-      </Router>
+        <Router history={history}>
+
+            <DevSupport ComponentPreviews={ComponentPreviews}
+                        useInitialHook={useInitial}
+            >
+                <App/>
+            </DevSupport>
+        </Router>
     </Provider>
-  /*</React.StrictMode>*/
-  ,
-  document.getElementById('root')
+    /*</React.StrictMode>*/
+    ,
+    document.getElementById('root')
 );
 
 //reportWebVitals();

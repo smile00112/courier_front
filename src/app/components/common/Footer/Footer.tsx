@@ -9,7 +9,7 @@ import Logo from '../Logo';
 
 const Footer = () => {
   //const SubscribeInput = withSubscribe(InputField);
-
+  const Y = new Date().getFullYear();
   return (
     <footer className='footer'>
       <Container>
@@ -37,7 +37,7 @@ const Footer = () => {
       <Divider variant='fullWidth' className='footer-divider' />
       <Container>
         <div className='footer-bottom'>
-          <p className='footer-copyright'>Copyright © 2022 Dolinger. Все права защищены.</p>
+          <p className='footer-copyright'>Copyright © {Y} Dolinger. Все права защищены.</p>
           <p className='footer-link'><a href="/">Оператор</a></p>
           <p className='footer-link'><a href="/courier">Курьеры</a></p>
           {/* <Link underline='none' href='https://github.com/Solexofficial' rel='noopener noreferrer' target='_blank'>

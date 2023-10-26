@@ -1,6 +1,6 @@
 import { createAction, createSlice } from '@reduxjs/toolkit';
 import couriersService from '../services/couriers.service.js';
-//import isOutDated from '../utils/isOutDated.js';
+import getCourierRouteObj from '../utils/couriersUtils';
 //import { BookingType } from './../types/types';
 //import { AppThunk, RootState } from './createStore.ts';
 const DEBUG = true;
@@ -28,7 +28,7 @@ const couriersSlice = createSlice({
       const courierIndex = state.entities.findIndex(courier => courier._id === action.payload._id);
       state.entities[courierIndex] = action.payload;
       state.isLoading = false;
-    },    
+    },
     couriersRequestFailed: (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
@@ -62,26 +62,47 @@ const couriersSlice = createSlice({
       /*обновляем только статус*/
       state.mapRoutes[courierIndex] = {...state.mapRoutes[courierIndex], status}
       state.entities[courierIndex].show_route = status;
-    },    
+    },
+
+    /*Создаём маршруты курьеров*/
     mapRoutesReceived: (state, action) => {
-      const map_routes =  action.payload.map( courier => { 
-        let points = [courier.coordinates];
-        if(typeof courier.orders !== 'undefined' && courier.orders.length > 0){
-          points= [...points, ...courier.orders.map( order => order.coordinates_to )];
-        }
-        return {courier_id: courier.id, transport: courier.transport, status: false, route: false, points: points}
+      const map_routes =  action.payload.map( courier => {
+        return getCourierRouteObj(courier)
       });
+
       if(DEBUG) console.warn('mapRoutesReceived', map_routes);
       state.mapRoutes = map_routes;
     },
-    /*обновляем полностью*/
+
+    /*обновляем данные маршрута курьера полностью*/
     mapRouteReceived: (state, action) => {
       if(DEBUG) console.log('=====mapRouteReceived====', action, state.mapRoutes);
       state.mapRoutes[action.payload.index] = action.payload.data;
-    },  
+    },
+
+    /*Пересоздаём маршрут курьера*/
+    courierReMakeRoute: (state, action) => {
+      const courierIndex = state.mapRoutes.findIndex(route => route.courier_id === action.payload._id);
+      let activeCourier = action.payload._id === state.activeCourier
+      console.warn('courierIndex', courierIndex)
+      state.mapRoutes[courierIndex] = getCourierRouteObj(action.payload, activeCourier);
+      state.isLoading = false;
+    },
+
     setActiveCourier: (state, action) => {
       state.activeCourier = action.payload;
-    }
+    },
+    courierRouteDistanceReducer: (state, action) => {
+      if(DEBUG) console.warn('=====courierRouteDistanceReducer====', action, state);
+      const courierIndex = state.entities.findIndex(courier => courier.id === action.payload.courier_id);
+      state.entities[courierIndex].routeDistance = action.payload.delivery_distance;
+    },
+    courierRouteTimeReducer: (state, action) => {
+      if(DEBUG) console.warn('=====courierRouteDistanceReducer====', action, state);
+      const courierIndex = state.entities.findIndex(courier => courier.id === action.payload.courier_id);
+      state.entities[courierIndex].routeTime = action.payload.delivery_time;
+    },
+
   },
 });
 
@@ -92,6 +113,7 @@ const {
   couriersReceived,
   couriersRequestFailed,
   couriersUpdateOne,
+  courierReMakeRoute,
   mapRoutesReceived,
   mapRouteReceived,
   setActiveCourier,
@@ -100,6 +122,9 @@ const {
   courierCreateRequested,
   courierCreateRequestedFailed,
   courierSetShowRotes,
+  courierRouteDistanceReducer,
+  courierRouteTimeReducer,
+
 } = actions;
 
 const removeBookingRequested = createAction('couriers/removeBookingRequested');
@@ -146,11 +171,16 @@ export const loadCouriersList = () => async (dispatch, getState) => {
 };
 
 
+
 export const reLoadCourier = (payload) => async dispatch => { 
   if(DEBUG) console.log('reLoadCourier payload', payload)
   try {
     const { content } = await couriersService.getById(payload);
+    //Обновляем данные курьера
     dispatch(couriersUpdateOne(content.data || []));
+    //Обновляем маршрут курьера
+    dispatch(courierReMakeRoute(content.data || []));
+
     //dispatch(couriersSort());
   } catch (error) {
     if(DEBUG) console.log('reLoadCourier error',error);
@@ -266,6 +296,9 @@ export const showCourierRoutes  = (payload) => courierSetShowRotes(payload);
 //     }
 //   };
 
+export const getActiveCourierData = (activeCourier) => (state) => {
+  return '12345   ' + activeCourier;
+}
 export const getActiveCourier = () => (state) => state.couriers.activeCourier;
 export const getCouriers = () => (state) => sort_couriers(state.couriers.entities, state.couriers.isLoading);
 export const getCouriersLoadingStatus = () => (state) => state.couriers.isLoading;
@@ -288,8 +321,10 @@ export const getCourierMapRoutes = (courier_id) => (state) => {
     return state.couriers.mapRoutes.filter(route => route.courier_id === courier_id);
   }
   return null;
-
 }
+export const courierDeliveryDistanceUpdate = (payload) => courierRouteDistanceReducer(payload);
+export const courierDeliveryTimeUpdate = (payload) => courierRouteTimeReducer(payload);
+
 
 // export const sortCouriersBy = (field) => (state) => {
 

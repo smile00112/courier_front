@@ -10,7 +10,7 @@ import {DotsIcon, WalkerIcon, CarIcon, BicycleIcon, TargetIcon, TimeIcon } from 
 //import ImageSlider from '../../../common/ImageSlider';
 //import Rating from '../../../common/Rating';
 import { CourierType } from '../../../../types/types';
-
+import {getPrettyTime, getPrettyDistance} from '../../../../utils/mapValuesFormat';
 
 
 // import ListSubheader from '@mui/material/ListSubheader';
@@ -85,7 +85,7 @@ const CourierCard: React.FC<CourierListProps> = ({ courier, scm, scm_order_id, t
   }
 
   const get_time_text = () => {
-    return '14 мин';
+    return getPrettyTime( courier.routeTime );
   }
 
   const get_dots_color = () => {

@@ -2,9 +2,10 @@
 //import { OrderType, BookingType } from './../types/types';
 import { createAction, createSlice } from '@reduxjs/toolkit';
 import ordersService from '../services/orders.service';
-import dateDiff from '../utils/getDateDiff';
+import { dateDiff, timeDiff }  from '../utils/getDateDiff';
+import couriersService from "../services/couriers.service";
 
-const DEBUG = false;
+const DEBUG = true;
 const ordersSlice = createSlice({
   name: 'orders',
   initialState: {
@@ -21,8 +22,10 @@ const ordersSlice = createSlice({
       state.isLoading = true;
     },
     ordersReceived: (state, action) => {
-      if(DEBUG) console.log('ordersReceived', action.payload)
-      state.entities = action.payload;
+      if(DEBUG) console.log( '___ordersReceived', action.payload );
+
+      //сортируем по активным заказам
+      state.entities =  action.payload.sort( (a, b) => ( ( a.current_order  ===  b.current_order ) ? 0 : ( a.current_order ? -1 : 1 ) ));
       state.isLoading = false;
     },
     filteredOrdersReceived: (state, action) => {
@@ -37,6 +40,10 @@ const ordersSlice = createSlice({
       console.log('orderUpdated', action)
       const orderIndex = state.entities.findIndex(order => order.id === action.payload.data.id);
       state.entities[orderIndex] = action.payload.data;
+
+      //сортируем по активным заказам
+      state.entities =  state.entities.sort( (a, b) => ( ( a.current_order  ===  b.current_order ) ? 0 : ( a.current_order ? -1 : 1 ) ));
+
     },
     orderNew: (state, action) => {
       console.log('orderNew', action.payload.order)
@@ -61,6 +68,22 @@ const ordersSlice = createSlice({
           order => dateDiff(Date.parse(order.order_close_time), new Date())
         );
     },
+    orderRouteDistanceReducer: (state, action) => {
+      //if(DEBUG) console.warn('=====orderRouteDistanceReducer====', action, state);
+
+      const orderIndex = state.entities.findIndex(order => order.id === action.payload.order_id);
+      state.entities[orderIndex].routeDistance = action.payload.delivery_distance;
+
+    },
+    orderRouteTimeReducer: (state, action) => {
+      //if(DEBUG) console.warn('=====orderRouteDistanceReducer====', action, state);
+
+      const orderIndex = state.entities.findIndex(order => order.id === action.payload.order_id);
+      state.entities[orderIndex].routeTime = action.payload.delivery_time;
+      // state.entities.map(
+      //     order => 'Route time 4567'
+      // );
+    },
     updateCourierCurrentOrder: (state, action) => {
         // state.entities.map(
         //   order => dateDiff(Date.parse(order.order_close_time), new Date())
@@ -77,9 +100,11 @@ const {
   ordersReceived, 
   ordersRequestFailed, 
   orderUpdated, 
-  filteredOrdersReceived, 
+  filteredOrdersReceived,
   orderDeliveryTimerReducer,
-  orderSelectCourierModeEnable, 
+  orderRouteDistanceReducer,
+  orderRouteTimeReducer,
+  orderSelectCourierModeEnable,
   orderSelectCourierModeDisable, 
   orderSetCourierToOrder,
   orderNew,
@@ -103,7 +128,8 @@ export const loadOrdersList = () => async dispatch => {
     const { content } = await ordersService.getAll();
     content.data.map(
       order => {
-          order.deliveryTimer = dateDiff(Date.parse(order.order_close_time), new Date());
+          order.deliveryTimerPretty = dateDiff(Date.parse(order.order_close_time), new Date());
+          order.deliveryTimer = timeDiff(Date.parse(order.order_close_time), new Date());
           order.productsTotal = order.products.reduce( (Sum, product) => Sum + (product.price * product.quantity), 0)
           //order.poducts_count = dateDiff(Date.parse(order.order_close_time), new Date());
           return order;
@@ -117,7 +143,7 @@ export const loadOrdersList = () => async dispatch => {
 };
 
 export const loadFilteredOrdersList =
-  (queryParams?) =>
+  (queryParams) =>
   async dispatch => {
     dispatch(ordersRequested());
     try {
@@ -183,12 +209,23 @@ export const removeBookingOrder =
         dispatch(orderUpdateRequestedFailed());
       }
   };
-  
-  export const updateCourierCurrentOrderInOrder = (payload) => async dispatch => { 
-    if(DEBUG) console.log('updateCourierCurrentOrderInOrder payload STOP', payload);
-    dispatch(updateCourierCurrentOrder(payload));
 
+export const reLoadOrder = (payload) => async dispatch => {
+  if(DEBUG) console.warn('reLoadOrder payload', payload)
+  try {
+    const { content } = await ordersService.getById(payload);
+    dispatch(orderUpdated(content || []));
+    //dispatch(couriersSort());
+  } catch (error) {
+    if(DEBUG) console.log('reLoadCourier error',error);
   }
+};
+
+export const updateCourierCurrentOrderInOrder = (payload) => async dispatch => {
+  if(DEBUG) console.log('updateCourierCurrentOrderInOrder payload STOP', payload);
+  dispatch(updateCourierCurrentOrder(payload));
+
+}
 
   
 export const getOrders = () => (state) => state.orders.entities;
@@ -205,8 +242,9 @@ export const getOrderById = (orderId) => (state) => {
 
 export const sosketNewOrder = (payload) => orderNew(payload);
 export const sosketUpdateOrder = (payload) => orderUpdated(payload);
-
 export const orderDeliveryTimerUpdate = () => orderDeliveryTimerReducer();
+export const orderRouteDistanceUpdate = (payload) => orderRouteDistanceReducer(payload);
+export const orderRouteTimeUpdate = (payload) => orderRouteTimeReducer(payload);
 export const enableModeSelectCourier = (payload) => orderSelectCourierModeEnable(payload);
 export const disableModeSelectCourier = (payload) => orderSelectCourierModeDisable(payload);
 export const courierToOrder = (payload) => orderSetCourierToOrder(payload);

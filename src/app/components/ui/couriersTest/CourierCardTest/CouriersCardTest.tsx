@@ -10,7 +10,7 @@ import {DotsIcon, WalkerIcon, CarIcon, BicycleIcon, TargetIcon, TimeIcon } from 
 //import ImageSlider from '../../../common/ImageSlider';
 //import Rating from '../../../common/Rating';
 import { CourierType } from '../../../../types/types';
-//import { Select, MenuItem, InputLabel, SelectChangeEvent, Button, TextField } from '@mui/material';
+import { Select, MenuItem, InputLabel, SelectChangeEvent, Button, TextField } from '@mui/material';
 
 import { useGeolocated } from "react-geolocated";
 

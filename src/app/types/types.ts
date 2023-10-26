@@ -50,7 +50,12 @@ export type OrderType = {
   number: number;   
   order_close_at: Date | string;   
   order_close_time: Date | string;
-  deliveryTimer: string;  
+
+  deliveryTimer: number;
+  deliveryTimerPretty: string;
+  routeDistance: string;
+  routeTime: string;
+
   order_created_at: Date | string;   
   order_delivery_start_at: Date | string; 
   price: number; 
@@ -75,6 +80,8 @@ export type CourierType = {
   rating: string; 
   status: string;   
   transport: string;
+  routeTime: string;
+  routeDistance: string;
   current_order: number | null,
   orders: Array<OrderTypeMini>,
   show_route: boolean,
