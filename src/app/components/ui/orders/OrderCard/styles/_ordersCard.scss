@@ -342,10 +342,15 @@
         display: flex;
         align-items: center;
         width: 60px;
-
-        img{
-          position: relative;
-          z-index: 2;
+        div{
+          display: inherit;
+          
+          img{
+            position: relative;
+            z-index: 2;
+            border-radius: 15px;
+            height: 25px;
+          }
         }
 
 
@@ -418,4 +423,22 @@
       margin-right: 5px;
     }
   }
+}
+
+.order-card__location{
+  cursor: pointer;
+}
+//.order-card__location.active svg{
+//  box-shadow: 0px 0px 10px 2px rgba(182, 5, 243, 0.76);
+//  border-radius: 20px;
+//}
+.free_orders .order-card__body-middle__address {
+  align-items: flex-start;
+  display: flex;
+  font-size: 16px;
+  font-weight: 500;
+  justify-content: space-between;
+}
+.free_orders .order-card__body-middle__address span {
+  font-weight: 600;
 }

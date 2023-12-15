@@ -40,8 +40,8 @@ const LoginForm = () => {
   return (
     <>
       <Form data={data} errors={errors} handleChange={handleInputChange}>
-        <InputField name='email' label='Email' autoFocus />
-        <InputFieldWithPassword name='password' label='Пароль' type='password' />
+        <InputField name='email' label='Email' autoFocus onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }}/>
+        <InputFieldWithPassword name='password' label='Пароль' type='password' onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }}/>
         <Button onClick={handleSubmit} fullWidth type='submit' disabled={enterError ? true : false}>
           Войти
         </Button>

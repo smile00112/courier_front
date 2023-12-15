@@ -17,11 +17,6 @@ export type RoomType = {
   hasWideCorridor?: boolean;
   hasDisabledAssistant?: boolean;
 };
-export type Client = {
-  _id?: string;
-  name: string;
-  phone: string;
-}
 export type AddressData = {
   sity: string;
   streetName: string;
@@ -58,13 +53,17 @@ export type OrderType = {
 
   order_created_at: Date | string;   
   order_delivery_start_at: Date | string; 
-  price: number; 
-  status: string;
+  price: number;
+  award: number;
+  status: number;
+  payment_type: string;
+  customer_note: string;
   client: Client,
   products: Array<OrderProducts>,
   delivery_price: number,
   productsTotal: number,  
   courier_id: number | null,
+
  // address_data: AddressData 
 };
 export type CourierType = {
@@ -86,6 +85,11 @@ export type CourierType = {
   orders: Array<OrderTypeMini>,
   show_route: boolean,
 };
+export type Client = {
+  _id?: string;
+  name: string;
+  phone: string;
+}
 export type OrderTypeMini = {
   id: number;
   address_from: number | string;
@@ -97,10 +101,14 @@ export type OrderTypeMini = {
   order_close_at: Date | string;   
   order_close_time: Date | string;
   order_created_at: Date | string;   
-  order_delivery_start_at: Date | string; 
-  price: number; 
+  order_delivery_start_at: Date | string;
+  price: number;
+  award: number;
   status: string;
   courier_id: number | null,
+  payment_type: string;
+  customer_note: string;
+  client: Client,
  // address_data: AddressData 
 };
 export type BookingType = {

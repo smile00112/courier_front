@@ -3,7 +3,20 @@ import { useSelector } from 'react-redux';
 //import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../../store/createStore';
 //import { getIsLoggedIn } from '../../../store/users';
-import { getOrders, getOrdersLoadingStatus, enableModeSelectCourier, disableModeSelectCourier, orderDeliveryTimerUpdate, getSelectCourierModeStatus, getSelectCourierModeOrderId, orderToCourier, updateCourierCurrentOrderInOrder } from '../../../store/orders';
+import {
+    getOrders,
+    getOrdersLoadingStatus,
+    enableModeSelectCourier,
+    disableModeSelectCourier,
+    orderDeliveryTimerUpdate,
+    getSelectCourierModeStatus,
+    getSelectCourierModeOrderId,
+    orderToCourier,
+    updateCourierCurrentOrderInOrder,
+    getActiveOrder,
+    seOrderActive,
+
+} from '../../../store/orders';
 import { getCouriers, getCouriersLoadingStatus, showCourierRoutes, reLoadCourier, courierActions, setCourierActive, getActiveCourier, updateCourierField } from '../../../store/couriers';
 import OrdersList from '../../ui/orders/OrdersList';
 import OrdersListSkeleton from '../../ui/orders/OrdersList/OrdersListSkeleton';
@@ -29,10 +42,12 @@ const CourierPage = () => {
   const scm_mode = useSelector(getSelectCourierModeStatus());
   const scm_order_id = useSelector(getSelectCourierModeOrderId());
   const activeCourier = useSelector(getActiveCourier());
+  const activeOrder = useSelector(getActiveOrder());
 
   const [courier_action_mode_obj , setCourier_mode] = React.useState({courier_action_mode: '', action_courier_id: 0});
 
   type ClickHandler = ($order_id: number) => (e: React.MouseEvent) => void;
+  type ClickTargerOrder = ( $status: boolean, $order_id: number ) => void;
   type ClickTargerCourier = ($courier_id: number, $type: boolean) => void;
   type ClickCourierActionMode = ($courier_id: number, $type: string) => void;
   type ClickSetCourierField = ($courier_id: number, $field: string, $value: string) => void;
@@ -45,7 +60,11 @@ const CourierPage = () => {
     else 
         dispatch( disableModeSelectCourier( {status: status, order_id: $order_id} ) );
   }
-  
+
+    const targerActiveOrder:ClickTargerOrder=($status, $order_id) =>{
+        dispatch( seOrderActive( $order_id === activeOrder ? null : $order_id ) );
+    }
+
   const targerCourier:ClickTargerCourier=($courier_id, $status) =>{
     dispatch( setCourierActive( $courier_id === activeCourier ? null : $courier_id ) );
     dispatch( showCourierRoutes( {courier_id: $courier_id, status: $status} ) );
@@ -140,6 +159,7 @@ const CourierPage = () => {
 
                   scmUpdate={scm_update}
                   selectOrderForAction={selectOrderForAction}
+                  targerActiveOrder={targerActiveOrder}
 
               />
             }
@@ -157,6 +177,7 @@ const CourierPage = () => {
 
                     scmUpdate={scm_update}
                     selectOrderForAction={selectOrderForAction}
+                    targerActiveOrder={targerActiveOrder}
                 />
           } 
        

@@ -26,7 +26,10 @@ type OrderListProps = {
   order: OrderType,
   scm: boolean,
   scm_order_id: number,
-  scmUpdate: (status: boolean, order_id: number) => void;
+  scmUpdate: (status: boolean, order_id: number) => void,
+  targerActiveOrder: (status: boolean, order_id: number) => void;
+  location: number;
+  setLocation: (location: number) => void;
 };
 
 // const comfortIconsMap: { [x: string]: JSX.Element } = {
@@ -37,7 +40,16 @@ type OrderListProps = {
 
 
 
-const OrdersCardTaked: React.FC<OrderListProps> = ({ order, scm, scm_order_id, scmUpdate } ) => {
+const OrdersCardTaked: React.FC<OrderListProps> = (
+    {
+      order,
+      scm,
+      scm_order_id,
+      scmUpdate,
+      targerActiveOrder,
+      location,
+      setLocation,
+    } ) => {
 
   const orderCourier = useSelector(getCourierById(order.courier_id));
   // const reviews = useSelector(getReviewsByOrderId(_id));
@@ -48,16 +60,22 @@ const OrdersCardTaked: React.FC<OrderListProps> = ({ order, scm, scm_order_id, s
       scmUpdate(status, order_id)
   };
 
+  const orderSetActiveHandle = (order_id: number) => (event: React.MouseEvent<unknown>) => {
+    setLocation(location == order_id ? 0 : order_id);
+    targerActiveOrder(!(location == order_id), order_id);
+  };
+
   const [open, setOpen] = React.useState(true);
   const handleClick = () => {
     setOpen(!open);
   };
+
   // const setState_addCourier = () => {
   //   useSelector(getReviewsByOrderId(_id));
   // }; 
-  const disableState_addCourier = () => {
-      
-  }; 
+  // const disableState_addCourier = () => {
+  //
+  // };
 
   const transportIcon = (courier) => {
     switch (courier.transport) {
@@ -82,6 +100,8 @@ const OrdersCardTaked: React.FC<OrderListProps> = ({ order, scm, scm_order_id, s
     : 
       <Button className='add-courier-button' onClick={setCourierModeUpdate(true, order.id)}> Назначить курьера </Button>
 
+// console.log('__order__', order);
+// console.log('__orderCourier__', orderCourier);
   return (
     <div className='order-card'>
 
@@ -95,13 +115,32 @@ const OrdersCardTaked: React.FC<OrderListProps> = ({ order, scm, scm_order_id, s
         <div className='order-card__body-top'>
           <ul className="order-card__info-list">
             <li className={order.deliveryTimer < 0 ? "" : "timer_out"}><TimeIcon color={'gay'}></TimeIcon>{ order.deliveryTimerPretty }</li>
-            <li><LocationIcon color={'gay'}></LocationIcon>{getPrettyDistance( order.routeDistance )}</li>
+            <li
+                className={'order-card__location '+ (location === order.id ? "active " : "") }
+                onClick={orderSetActiveHandle(order.id)}
+            ><LocationIcon color={'gay'}></LocationIcon>{getPrettyDistance( order.routeDistance )}</li>
             <li><PriceIcon color={'gay'}></PriceIcon>{order.delivery_price}₽</li>
           </ul>
         </div>
         <div className='order-card__body-middle-inner'>
           <div className='order-card__body-middle'>
-            <div className="order-card__body-middle__address">{order.address_to.streetAddress}</div>
+
+            <div className="order-card__body-middle__address ">
+              {order.address_from} <span>откуда</span>
+            </div>
+            <hr></hr>
+            <div className="order-card__body-middle__address">{order.address_to.streetAddress}  <span>куда</span>
+
+            </div>
+            {
+              order.payment_type ?
+                  <div className="order-card__body-middle__address">
+                    {order.payment_type} <span>оплата</span>
+                  </div>
+                  :
+                  ''
+            }
+
             <div className="order-card__body-middle__client-name">{order.client.name}</div>
             <div className="order-card__body-middle__address-data">
               <ul className="">
@@ -144,17 +183,17 @@ const OrdersCardTaked: React.FC<OrderListProps> = ({ order, scm, scm_order_id, s
         {/* тут будет назначенный курьер */}
         <div className='order-card__bottom__courier_info'>
             <div className='order-card__bottom__courier_info__images'>
-              <div><img src={order.courier.avatar} /></div>
+              <div><img src={orderCourier.avatar} /></div>
               <div className='transport_icon'>{transportIcon(order.courier)}</div>
             </div>
             <div className='order-card__bottom__courier_info__fio_time'>
-              <div>{order.courier.fio}</div>
+              <div>{orderCourier.fio}</div>
               <div className='time'>
                 <div>{orderCourier.orders.length} достав{declOfNum(orderCourier.orders.length, ['ка', 'ки', 'ок'])}</div>
                 <div>{getPrettyTime(order.routeTime)}</div>
               </div>
             </div>
-            
+
         </div>
          
          

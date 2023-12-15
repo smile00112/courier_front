@@ -4,7 +4,7 @@ import { sosketNewOrder, sosketUpdateOrder, reLoadOrder } from '../../../store/o
 import {reLoadCourier, updateCourier} from '../../../store/couriers';
 import { toast } from 'react-toastify';
 
-const DEBUG = true;
+const DEBUG = false;
 declare global {
   interface window {
   Echo:any;
@@ -55,7 +55,8 @@ const Soskets = () => {
   /**Сокеты канал заказов**/
   window['Echo'].channel('operator_orders')
   .listen('NewOrderEvent', (e) => {
-    dispatch(sosketNewOrder(e));
+    //dispatch(sosketNewOrder(e));
+    dispatch(reLoadOrder(e.order.id ));
     show_toast(`❗ Получен новый заказ №'${e.order.number} ❗`);
     if(DEBUG) console.log('NewOrderEvent');
     if(DEBUG) console.error(e);

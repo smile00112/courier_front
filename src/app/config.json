@@ -1,7 +1,3 @@
 {
-  "apiEndPoint": "https://courier-app.local/api",
-  "apiEndPoint2": "https://dodoma-app.dolinger-app.ru/api",
-  "apiDevEndPoint": "http://localhost:8000/api",
-  "apiProdEndPoint": "http://courier.dolinger-app.ru/api",
   "isFireBase": false
 }

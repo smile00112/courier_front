@@ -21,12 +21,15 @@ import CourierCard from "../../couriers/CourierCard";
 
 type OrderListProps = {
     free: boolean,
-
     order: OrderType,
     scm: boolean,
     scm_order_id: number,
-    scmUpdate: (status: boolean, order_id: number) => void;
-    activeCourierData: CourierType | null;
+    scmUpdate: (status: boolean, order_id: number) => void,
+    activeCourierData: CourierType | null,
+    targerActiveOrder: (status: boolean, order_id: number) => void;
+    location: number;
+    setLocation: (location: number) => void;
+
 };
 
 const comfortIconsMap: { [x: string]: JSX.Element } = {
@@ -41,7 +44,12 @@ const OrderCard: React.FC<OrderListProps> = ({
                                                  scm,
                                                  scm_order_id,
                                                  scmUpdate,
-                                                 activeCourierData
+                                                 activeCourierData,
+                                                 targerActiveOrder,
+                                                 location,
+                                                 setLocation,
+
+
                                              }) => {
     // const reviews = useSelector(getReviewsByOrderId(_id));
     // const countReviews = reviews ? reviews.length : 0;
@@ -51,7 +59,13 @@ const OrderCard: React.FC<OrderListProps> = ({
         scmUpdate(status, order_id)
     };
 
+    const orderSetActiveHandle = (order_id: number) => (event: React.MouseEvent<unknown>) => {
+        setLocation(location == order_id ? 0 : order_id);
+        targerActiveOrder(!(location == order_id), order_id);
+    };
+
     const [open, setOpen] = React.useState(true);
+
     const handleClick = () => {
         setOpen(!open);
     };
@@ -83,7 +97,10 @@ const OrderCard: React.FC<OrderListProps> = ({
                     <ul className="order-card__info-list">
                         <li className={order.deliveryTimer < 0 ? "" : "timer_out"}><TimeIcon
                             color={'gay'}></TimeIcon>{order.deliveryTimerPretty}</li>
-                        <li><LocationIcon></LocationIcon>
+                        <li
+                            className={'order-card__location '+ (location === order.id ? "active " : "") }
+                            onClick={orderSetActiveHandle(order.id)}
+                        ><LocationIcon></LocationIcon>
                             {
                                 //@ts-ignoredd
                                 activeCourierData && getDistanceByCoord(activeCourierData.coordinates[0], activeCourierData.coordinates[1], order.coordinates_to[0], order.coordinates_to[1])
@@ -94,7 +111,21 @@ const OrderCard: React.FC<OrderListProps> = ({
                 </div>
                 <div className='order-card__body-middle-inner'>
                     <div className='order-card__body-middle'>
-                        <div className="order-card__body-middle__address">{order.address_to.streetAddress}</div>
+                        <div className="order-card__body-middle__address ">
+                            {order.address_from} <span>откуда</span>
+                        </div>
+                        <hr></hr>
+                        <div className="order-card__body-middle__address">{order.address_to.streetAddress}  <span>куда</span>
+
+                        </div>
+                        {
+                            order.payment_type ?
+                                <div className="order-card__body-middle__address">
+                                    {order.payment_type} <span>оплата</span>
+                                </div>
+                                :
+                                ''
+                        }
                         <div className="order-card__body-middle__client-name">{order.client.name}</div>
                         <div className="order-card__body-middle__address-data">
                             <ul className="">
@@ -138,6 +169,8 @@ const OrderCard: React.FC<OrderListProps> = ({
                             </div>
                         </div>
                         <div className='order-card__body-bottom'>
+
+
                         </div>
                     </div>
                 </div>

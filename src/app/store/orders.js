@@ -5,7 +5,7 @@ import ordersService from '../services/orders.service';
 import { dateDiff, timeDiff }  from '../utils/getDateDiff';
 import couriersService from "../services/couriers.service";
 
-const DEBUG = true;
+const DEBUG = false;
 const ordersSlice = createSlice({
   name: 'orders',
   initialState: {
@@ -13,7 +13,8 @@ const ordersSlice = createSlice({
     filteredEntities: [] ,
     isLoading: true,
     selectCourierMode: false,
-    selectCourierForOrder: 0, 
+    selectCourierForOrder: 0,
+    activeOrder: null,
     error: null,
   },
   reducers: {
@@ -39,8 +40,14 @@ const ordersSlice = createSlice({
     orderUpdated: (state, action) => {
       console.log('orderUpdated', action)
       const orderIndex = state.entities.findIndex(order => order.id === action.payload.data.id);
-      state.entities[orderIndex] = action.payload.data;
+      if(orderIndex !== -1){ //update
+        state.entities[orderIndex] = action.payload.data;
 
+      }
+      else { //add
+
+        state.entities.push(action.payload.data);
+      }
       //сортируем по активным заказам
       state.entities =  state.entities.sort( (a, b) => ( ( a.current_order  ===  b.current_order ) ? 0 : ( a.current_order ? -1 : 1 ) ));
 
@@ -88,7 +95,10 @@ const ordersSlice = createSlice({
         // state.entities.map(
         //   order => dateDiff(Date.parse(order.order_close_time), new Date())
         // );
-    }    
+    }  ,
+    setActiveOrder: (state, action) => {
+      state.activeOrder = action.payload;
+    },
     
   },
 });
@@ -109,6 +119,7 @@ const {
   orderSetCourierToOrder,
   orderNew,
   updateCourierCurrentOrder,
+  setActiveOrder,
 } = actions;
 
 const addBookingOrderRequested = createAction('orders/addBookingOrderRequested');
@@ -130,7 +141,7 @@ export const loadOrdersList = () => async dispatch => {
       order => {
           order.deliveryTimerPretty = dateDiff(Date.parse(order.order_close_time), new Date());
           order.deliveryTimer = timeDiff(Date.parse(order.order_close_time), new Date());
-          order.productsTotal = order.products.reduce( (Sum, product) => Sum + (product.price * product.quantity), 0)
+          order.productsTotal = order.products.reduce( (Sum, product) => Sum + (product.price), 0)
           //order.poducts_count = dateDiff(Date.parse(order.order_close_time), new Date());
           return order;
       }
@@ -255,5 +266,12 @@ export const getOrdersByIds = (ordersIds) => (state) => {
   }
   return [];
 };
+
+export const seOrderActive = (payload) => async dispatch => {
+  if(DEBUG) console.log('setActiveCourier payload ', payload)
+  dispatch(setActiveOrder(payload || null));
+  //dispatch(couriersSort());
+}
+export const getActiveOrder = () => (state) => state.orders.activeOrder;
 
 export default ordersReducer;

@@ -8,7 +8,7 @@ import Echo from 'laravel-echo';
 window.Pusher = require('pusher-js');
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: '38a5dbf8bcb4d739a39b',
+    key: process.env.REACT_APP_PUSHER_KEY,
     cluster: 'eu',
     forceTLS: true
 });
@@ -16,7 +16,7 @@ window.Echo = new Echo({
 
 const DEBUG = false;
 const http = axios.create({
-  baseURL: configFile.apiEndPoint,
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 http.interceptors.request.use(

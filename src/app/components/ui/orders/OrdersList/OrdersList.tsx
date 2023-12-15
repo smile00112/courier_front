@@ -13,9 +13,10 @@ type OrderListProps = {
   activeCourier: number,  
   courier_action_mode: {courier_action_mode: string, action_courier_id: number}, 
   scmUpdate: (status: boolean, order_id: number) => void;//React.MouseEvent<HTMLElement>,  
-  selectOrderForAction: (order_id: number) => void;  
-};
+  selectOrderForAction: (order_id: number) => void;
+  targerActiveOrder: (status: boolean, order_id: number)=> void;
 
+};
 
 const OrdersList: React.FC<OrderListProps> = ({
       type,
@@ -25,12 +26,15 @@ const OrdersList: React.FC<OrderListProps> = ({
       courier_action_mode,
       activeCourier,
       scmUpdate,
-      selectOrderForAction
+      selectOrderForAction,
+      targerActiveOrder,
     }) => {
 
   const free = (type === 'free') ? true : false;
-  
-  const [ordersFilter, setCouriersFilter] = React.useState(3);
+  const [location, setLocation] = React.useState(0);
+
+
+    const [ordersFilter, setCouriersFilter] = React.useState(3);
   const ordersFilterHandle = (new_filter: number) => (event: React.MouseEvent<unknown>) => {
     setCouriersFilter(new_filter);
   };
@@ -39,8 +43,8 @@ const OrdersList: React.FC<OrderListProps> = ({
     if(free) 
       return (order.status === 1 );
 
-    if( ordersFilter === 3 )
-      return ( order.status === 3 || order.status === 2 )
+    // if( ordersFilter === 3 )
+    //   return ( order.status === 3 || order.status === 2 )
 
     return ( order.status === ordersFilter )      
   });
@@ -60,13 +64,19 @@ const OrdersList: React.FC<OrderListProps> = ({
       (!free) ? (
         <li className="orders-sorting">
             <div className="orders-sorting__warapper">  
-                <div className={'delivery' + (ordersFilter ===  2 || ordersFilter ===  3 ? " active" : "")} onClick={ordersFilterHandle(3)}>В доставке</div>
+                <div className={'delivery' + (ordersFilter ===  2  ? " active" : "")} onClick={ordersFilterHandle(2)}>В доставке</div>
+                <div className={'delivery' + (ordersFilter ===  3 ? " active" : "")} onClick={ordersFilterHandle(3)}>Взяты</div>
                 <div className={'closed' + (ordersFilter ===  4 ? " active" : "")} onClick={ordersFilterHandle(4)}>Завершены</div>
             </div>
         </li>
       ) : (
              <li className="orders-sorting">
-                <div className="orders-sorting__warapper free"><div className="title-text">Не распределены</div></div>
+                <div className="orders-sorting__warapper free">
+                    <div className="title-text">
+                        Не распределены
+                        ({ orders.reduce((sum, order) => sum + (order.status === 1 ? 1 : 0), 0) })
+                    </div>
+                </div>
               </li>
        )
       }
@@ -83,7 +93,18 @@ const OrdersList: React.FC<OrderListProps> = ({
             itemClass+= ( courier_action_mode.courier_action_mode && courier_action_mode.courier_action_mode !== 'take' ) ? ' disabled' : '' ;
             return (
               <li key={'order_not_taked_' + order._id} className={itemClass} onClick={clickOrderHandle(order.id)}>
-                <OrderCard free={free} order={order} scm={scm} scm_order_id={scm_order_id} scmUpdate={scmUpdate} activeCourierData={activeCourierData}/>
+                <OrderCard
+                    free={free}
+                    order={order}
+                    scm={scm}
+                    scm_order_id={scm_order_id}
+                    scmUpdate={scmUpdate}
+                    activeCourierData={activeCourierData}
+                    targerActiveOrder={targerActiveOrder}
+                    location={location}
+                    setLocation={setLocation}
+
+                />
               </li>
             )
           }
@@ -93,7 +114,16 @@ const OrdersList: React.FC<OrderListProps> = ({
             itemClass+= ( activeCourier && ( order.courier_id === activeCourier ) ? ' courier_active'+( (order.id === order.courier.current_order) ? ' current_order' : '') : '' );
             return (
               <li key={'order_taked_' + order._id} className={itemClass} onClick={clickOrderHandle(order.id)}>
-                <OrderCardTaked free={free} order={order} scm={scm} scm_order_id={scm_order_id} scmUpdate={scmUpdate}/>
+                <OrderCardTaked
+                    free={free}
+                    order={order}
+                    scm={scm}
+                    scm_order_id={scm_order_id}
+                    scmUpdate={scmUpdate}
+                    targerActiveOrder={targerActiveOrder}
+                    location={location}
+                    setLocation={setLocation}
+                />
               </li>
             )
           }

@@ -26,7 +26,6 @@ export const userProfileRoutes = [
 //   icon?: OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
 //     muiName: string;
 //   };
-// };
 
 export const adminRoutes = [
   { path: '/profile/dashboard', name: 'Панель администратора', icon: AdminPanelSettingsIcon },
