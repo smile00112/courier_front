@@ -311,8 +311,13 @@ export const getCouriersByUserId = (userId) => (state) => {
 };
 export const getCourierById = (courierId) => (state) => {
   if (state.couriers.entities) {
-    return state.couriers.entities.filter(courier => courier._id === courierId)[0];
+    console.warn(state.couriers.entities);
+    console.warn(courierId);
+    let order_courier = state.couriers.entities.find(courier => courier.id === courierId)
+    console.warn(order_courier);
+    return order_courier;
   }
+  alert()
   return [];
 };
 export const getMapRoutes = () => (state) => state.couriers.mapRoutes;

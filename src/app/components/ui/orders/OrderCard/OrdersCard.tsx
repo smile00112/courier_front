@@ -158,8 +158,13 @@ const OrderCard: React.FC<OrderListProps> = ({
                                             {
                                                 order.products.map(product => (
                                                     <ListItemButton key={product.id} sx={{pl: 4}}>
-                                                        <div className='product-name'>{product.name}</div>
+                                                        <div className='product-name'>
+                                                            {product.name + ( product.cost_price ? ' (себ.'+ product.cost_price + '₽)' : '' ) }
+                                                        </div>
                                                         <div className='product-quantity'>{product.quantity} шт</div>
+                                                        <span
+                                                            className={`font-strong`}>({product.price}₽)
+                                                        </span>
                                                     </ListItemButton>
                                                 ))}
 

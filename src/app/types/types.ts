@@ -30,6 +30,7 @@ export type OrderProducts = {
   id: string;
   name: string;
   price: string;
+  cost_price: string;
   quantity: string;
 }
 export type OrderType = {
